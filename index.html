@@ -1,30 +1,27 @@
-function signIn(){
-  const phone = document.getElementById('loginPhone').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  const msg = document.getElementById('loginMsg');
-  
-  if(!phone || !pass){
-    msg.innerHTML = '<span style="color:orange">Enter phone + password</span>';
-    alert('Enter phone + password');
+function signUp(){
+  const name = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass = document.getElementById('regPass').value.trim();
+  const msg = document.getElementById('regMsg');
+
+  if(!name || !phone || !pass){
+    msg.innerHTML = '<span style="color:orange">Fill all fields</span>';
+    alert('Fill all fields');
     return;
   }
-  
+
   let users = JSON.parse(localStorage.getItem('vox_users') || '[]');
-  let found = users.find(u => u.phone === phone && u.pass === pass);
-  
-  if(found){
-    localStorage.setItem('vox_current', JSON.stringify(found));
-    msg.innerHTML = '<span style="color:#0f0">Success! Loading...</span>';
-    setTimeout(()=>{ showPage('market'); updateAccount(); }, 500);
-  } else {
-    // check if phone exists but wrong pass
-    let phoneExists = users.find(u => u.phone === phone);
-    if(phoneExists){
-      msg.innerHTML = '<span style="color:red">Wrong password!</span>';
-      alert('Wrong password! Try again. Phone: ' + phone);
-    } else {
-      msg.innerHTML = '<span style="color:red">Account not found on this phone. Please SIGN UP first!</span>';
-      alert('Account not found on this PHONE. Click SIGN UP to create account on this phone first!');
-    }
+  if(users.find(u => u.phone === phone)){
+    msg.innerHTML = '<span style="color:orange">Phone already exists, go to SIGN IN</span>';
+    alert('This phone already exists, now SIGN IN');
+    showPage('login');
+    return;
   }
+  let newUser = {name, phone, pass, balance:0, profit:0};
+  users.push(newUser);
+  localStorage.setItem('vox_users', JSON.stringify(users));
+  localStorage.setItem('vox_current', JSON.stringify(newUser));
+  msg.innerHTML = '<span style="color:#0f0">Account created!</span>';
+  alert('Account created on THIS device! Now you can use it');
+  showPage('market');
 }

@@ -1,27 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVOX CODES</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0a0f1e;color:white;min-height:100vh}
+.header{background:#111a32;padding:15px;text-align:center;border-bottom:2px solid #00ff88}
+.header h1{color:#00ff88;letter-spacing:2px}
+.container{max-width:400px;margin:20px auto;padding:15px}
+.card{background:#151f3d;border-radius:15px;padding:20px;margin-bottom:15px;border:1px solid #1e2d5a}
+input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none;background:#0d142b;color:white;outline:none;border:1px solid #2a3a6a}
+button{width:100%;padding:12px;border:none;border-radius:8px;background:#00ff88;color:#000;font-weight:bold;cursor:pointer;margin-top:10px;font-size:16px}
+button:active{transform:scale(0.98)}
+button.secondary{background:transparent;color:#00ff88;border:1px solid #00ff88}
+.nav{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+.nav button{flex:1;min-width:70px;padding:10px;font-size:13px}
+.page{display:none}
+.page.active{display:block}
+.msg{min-height:20px;margin:10px 0;font-size:14px;text-align:center}
+.balance{font-size:28px;color:#00ff88;text-align:center;margin:10px 0}
+.label{color:#8a9bb5;font-size:12px}
+.value{font-size:16px;margin-bottom:10px}
+.till-box{background:#0d142b;padding:12px;border-radius:8px;margin:10px 0;display:flex;justify-content:space-between;align-items:center}
+</style>
+</head>
+<body>
+<div class="header"><h1>AVOX CODES</h1></div>
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginPage" class="page active">
+  <div class="card">
+    <h2 style="text-align:center;margin-bottom:15px">SIGN IN</h2>
+    <input id="loginPhone" placeholder="Phone Number (e.g 0790806650)" type="tel">
+    <input id="loginPass" placeholder="Password" type="password">
+    <div id="loginMsg" class="msg"></div>
+    <button onclick="signIn()">SIGN IN</button>
+    <button class="secondary" onclick="showPage('register')">No account? SIGN UP</button>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div id="registerPage" class="page">
+  <div class="card">
+    <h2 style="text-align:center;margin-bottom:15px">SIGN UP</h2>
+    <input id="regName" placeholder="Full Name">
+    <input id="regPhone" placeholder="Phone Number" type="tel">
+    <input id="regPass" placeholder="Password (min 4)" type="password">
+    <div id="regMsg" class="msg"></div>
+    <button onclick="signUp()">CREATE ACCOUNT</button>
+    <button class="secondary" onclick="showPage('login')">Have account? SIGN IN</button>
+  </div>
+</div>
+
+<!-- MARKET -->
+<div id="marketPage" class="page">
+  <div class="nav">
+    <button onclick="showPage('market')" style="background:#00ff88;color:#000">MARKET</button>
+    <button class="secondary" onclick="showPage('account')">ACCOUNT</button>
+    <button class="secondary" onclick="showPage('deposit')">DEPOSIT</button>
+    <button class="secondary" onclick="showPage('withdraw')">WITHDRAW</button>
+    <button class="secondary" onclick="logout()">LOGOUT</button>
+  </div>
+  <div class="card">
+    <div class="label">WELCOME</div>
+    <div id="marketName" class="value">Player</div>
+    <div class="balance" id="marketBalance">KES 0</div>
+    <div style="text-align:center;color:#8a9bb5;font-size:13px">Profit: <span id="marketProfit" style="color:#00ff88">KES 0</span></div>
+    <hr style="margin:15px 0;border:0;border-top:1px solid #1e2d5a">
+    <p style="text-align:center;color:#8a9bb5">🔥 Aviator Market Coming Soon - You can trade here</p>
+    <button onclick="alert('Market game loading...')">PLAY AVIATOR</button>
+  </div>
+</div>
+
+<!-- ACCOUNT -->
+<div id="accountPage" class="page">
+  <div class="nav">
+    <button class="secondary" onclick="showPage('market')">MARKET</button>
+    <button onclick="showPage('account')" style="background:#00ff88;color:#000">ACCOUNT</button>
+    <button class="secondary" onclick="showPage('deposit')">DEPOSIT</button>
+    <button class="secondary" onclick="showPage('withdraw')">WITHDRAW</button>
+  </div>
+  <div class="card">
+    <h3>MY ACCOUNT</h3><br>
+    <div class="label">Name</div><div id="accName" class="value">-</div>
+    <div class="label">Phone</div><div id="accPhone" class="value">-</div>
+    <div class="label">Balance</div><div id="accBalance" class="value" style="color:#00ff88">KES 0</div>
+    <div class="till-box">
+      <div><div class="label">Till Number</div><div id="accTill">Not set</div></div>
+      <button style="width:auto;padding:6px 12px;font-size:12px" onclick="setTill()">SET</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOSIT -->
+<div id="depositPage" class="page">
+  <div class="nav">
+    <button class="secondary" onclick="showPage('market')">MARKET</button>
+    <button class="secondary" onclick="showPage('account')">ACCOUNT</button>
+    <button onclick="showPage('deposit')" style="background:#00ff88;color:#000">DEPOSIT</button>
+    <button class="secondary" onclick="showPage('withdraw')">WITHDRAW</button>
+  </div>
+  <div class="card">
+    <h3>DEPOSIT</h3><br>
+    <div class="label">Till: <span id="depTill" style="color:#00ff88">Not set - Go to Account to set</span></div><br>
+    <input id="depAmount" placeholder="Amount KES" type="number">
+    <input id="depCode" placeholder="M-Pesa Code">
+    <button onclick="doDeposit()">SUBMIT DEPOSIT</button>
+    <p style="font-size:12px;color:#8a9bb5;margin-top:10px;text-align:center">Admin will approve in 5 mins</p>
+  </div>
+</div>
+
+<!-- WITHDRAW -->
+<div id="withdrawPage" class="page">
+  <div class="nav">
+    <button class="secondary" onclick="showPage('market')">MARKET</button>
+    <button class="secondary" onclick="showPage('account')">ACCOUNT</button>
+    <button class="secondary" onclick="showPage('deposit')">DEPOSIT</button>
+    <button onclick="showPage('withdraw')" style="background:#00ff88;color:#000">WITHDRAW</button>
+  </div>
+  <div class="card">
+    <h3>WITHDRAW</h3><br>
+    <div class="balance" id="withBalance">KES 0</div>
+    <input id="withAmount" placeholder="Amount KES" type="number">
+    <button onclick="doWithdraw()">REQUEST WITHDRAWAL</button>
+  </div>
+</div>
+
+</div>
+<script>
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById(p+'Page').classList.add('active');
+  if(p==='market'||p==='account'||p==='deposit'||p==='withdraw') updateAccount();
+}
 function signUp(){
-  const name = document.getElementById('regName').value.trim();
-  const phone = document.getElementById('regPhone').value.trim();
-  const pass = document.getElementById('regPass').value.trim();
-  const msg = document.getElementById('regMsg');
-
-  if(!name || !phone || !pass){
-    msg.innerHTML = '<span style="color:orange">Fill all fields</span>';
-    alert('Fill all fields');
-    return;
-  }
-
-  let users = JSON.parse(localStorage.getItem('vox_users') || '[]');
-  if(users.find(u => u.phone === phone)){
-    msg.innerHTML = '<span style="color:orange">Phone already exists, go to SIGN IN</span>';
-    alert('This phone already exists, now SIGN IN');
-    showPage('login');
-    return;
-  }
-  let newUser = {name, phone, pass, balance:0, profit:0};
+  const name=document.getElementById('regName').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const pass=document.getElementById('regPass').value.trim();
+  const msg=document.getElementById('regMsg');
+  if(!name||!phone||!pass){msg.innerHTML='<span style="color:orange">Fill all fields</span>';alert('Fill all fields');return;}
+  if(pass.length<4){msg.innerHTML='<span style="color:orange">Password min 4 chars</span>';return;}
+  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
+  if(users.find(u=>u.phone===phone)){msg.innerHTML='<span style="color:orange">Phone exists, Sign In now</span>';alert('This phone already has account. Go SIGN IN');showPage('login');return;}
+  let newUser={name,phone,pass,balance:0,profit:0,till:''};
   users.push(newUser);
-  localStorage.setItem('vox_users', JSON.stringify(users));
-  localStorage.setItem('vox_current', JSON.stringify(newUser));
-  msg.innerHTML = '<span style="color:#0f0">Account created!</span>';
-  alert('Account created on THIS device! Now you can use it');
+  localStorage.setItem('vox_users',JSON.stringify(users));
+  localStorage.setItem('vox_current',JSON.stringify(newUser));
+  msg.innerHTML='<span style="color:#0f0">Created! Loading...</span>';
+  alert('Account created on THIS device!');
   showPage('market');
 }
+function signIn(){
+  const phone=document.getElementById('loginPhone').value.trim();
+  const pass=document.getElementById('loginPass').value.trim();
+  const msg=document.getElementById('loginMsg');
+  if(!phone||!pass){msg.innerHTML='<span style="color:orange">Enter phone + password</span>';alert('Enter phone and password');return;}
+  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
+  let found=users.find(u=>u.phone===phone && u.pass===pass);
+  if(found){
+    localStorage.setItem('vox_current',JSON.stringify(found));
+    msg.innerHTML='<span style="color:#0f0">Success! Loading...</span>';
+    setTimeout(()=>{showPage('market');},400);
+  }else{
+    let phoneExists=users.find(u=>u.phone===phone);
+    if(phoneExists){
+      msg.innerHTML='<span style="color:red">Wrong password!</span>';
+      alert('Wrong password for '+phone);
+    }else{
+      msg.innerHTML='<span style="color:red">Not found on THIS device. Please SIGN UP first!</span>';
+      alert('No account on this device. Click SIGN UP to create account on this phone/laptop first!');
+    }
+  }
+}
+function updateAccount(){
+  let cur=JSON.parse(localStorage.getItem('vox_current')||'null');
+  if(!cur){showPage('login');return;}
+  // refresh from users list
+  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
+  let fresh=users.find(u=>u.phone===cur.phone)||cur;
+  document.getElementById('marketName').innerText=fresh.name;
+  document.getElementById('marketBalance').innerText='KES '+fresh.balance;
+  document.getElementById('marketProfit').innerText='KES '+fresh.profit;
+  document.getElementById('accName').innerText=fresh.name;
+  document.getElementById('accPhone').innerText=fresh.phone;
+  document.getElementById('accBalance').innerText='KES '+fresh.balance;
+  document.getElementById('accTill').innerText=fresh.till||'Not set';
+  document.getElementById('depTill').innerText=fresh.till||'Not set - Go to Account to set';
+  document.getElementById('withBalance').innerText='KES '+fresh.balance;
+}
+function setTill(){
+  let t=prompt('Enter your M-Pesa Till Number:');
+  if(!t) return;
+  let cur=JSON.parse(localStorage.getItem('vox_current'));
+  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
+  let idx=users.findIndex(u=>u.phone===cur.phone);
+  if(idx>=0){users[idx].till=t;cur.till=t;localStorage.setItem('vox_users',JSON.stringify(users));localStorage.setItem('vox_current',JSON.stringify(cur));updateAccount();alert('Till saved: '+t);}
+}
+function doDeposit(){
+  let amt=document.getElementById('depAmount').value;
+  let code=document.getElementById('depCode').value;
+  if(!amt||!code){alert('Enter amount and M-Pesa code');return;}
+  alert('Deposit request KES '+amt+' Code: '+code+' received! Admin will approve.');
+  document.getElementById('depAmount').value='';document.getElementById('depCode').value='';
+}
+function doWithdraw(){
+  let amt=parseFloat(document.getElementById('withAmount').value);
+  let cur=JSON.parse(localStorage.getItem('vox_current'));
+  if(!amt||amt<=0){alert('Enter amount');return;}
+  if(amt>cur.balance){alert('Insufficient balance. Balance: '+cur.balance);return;}
+  alert('Withdraw KES '+amt+' requested! Will be sent to '+cur.phone);
+  document.getElementById('withAmount').value='';
+}
+function logout(){localStorage.removeItem('vox_current');showPage('login');}
+// auto login if already
+(function(){
+  let cur=localStorage.getItem('vox_current');
+  if(cur){showPage('market');}
+})();
+</script>
+</body>
+</html>

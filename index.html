@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CODE CRASH</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050508;color:#fff;font-family:Arial;padding-bottom:65px}
+.header{padding:10px;display:flex;justify-content:space-between;align-items:center;background:#0e0e1a}
+.real-on{background:#ffcc00;color:#000;padding:6px 14px;border:0;border-radius:15px;font-weight:900;font-size:11px}.off{background:#222;color:#888;padding:6px 14px;border:0;border-radius:15px;font-size:11px}
+#game{height:44vh;background:#050508;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#mult{font-size:75px;font-weight:900;color:#ffcc00;z-index:5;text-shadow:0 0 20px #ffcc00;font-family:monospace}
+#codes{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.4}
+.code{position:absolute;color:#ffcc00;font-size:13px;font-weight:700;animation:up linear forwards;font-family:monospace}
+@keyframes up{0%{transform:translateY(50vh);opacity:0}15%{opacity:1}100%{transform:translateY(-50px);opacity:0}}
+#timer{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#ffcc00;color:#000;padding:6px 16px;border-radius:20px;font-weight:900;z-index:10}
+.bet{margin:6px 8px;background:#151525;border:1px solid #222;border-radius:14px;padding:8px;display:flex;gap:8px}
+.bet input{width:70px;background:#050508;border:1px solid #333;color:#ffcc00;border-radius:10px;padding:11px;text-align:center;font-weight:900}
+.bet button{flex:1;padding:12px;border:0;border-radius:10px;font-weight:900;background:#ffcc00}
+.tab{display:none}.tab.active{display:block}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#12121f;display:flex;border-top:1px solid #333;height:58px}
+.bottom button{flex:1;background:0;border:0;color:#888;font-size:11px;font-weight:700}.bottom button.active{color:#ffcc00;border-top:3px solid #ffcc00}
+#auth{position:fixed;inset:0;background:rgba(5,5,8,0.97);z-index:999;display:flex;align-items:center;justify-content:center}
+.box{background:#151525;border:2px solid #ffcc00;border-radius:18px;padding:20px;width:92%;max-width:350px;text-align:center}
+.box input{width:100%;padding:12px;margin:6px 0;background:#050508;border:1px solid #333;border-radius:10px;color:#fff}
+.t{padding:8px 16px;border:0;background:0;color:#888;font-weight:900}.t.on{color:#ffcc00;border-bottom:2px solid #ffcc00}
+</style>
+</head>
+<body>
+
+<div id="auth">
+<div class="box">
+<h3 style="color:#ffcc00;margin:0">CODE CRASH</h3><small style="color:#888">VOX CODES</small>
+<div style="margin:12px 0"><button id="tb1" class="t on" onclick="showA('in')">SIGN IN</button><button id="tb2" class="t" onclick="showA('up')">SIGN UP</button></div>
+<div id="fIn"><input id="lp" placeholder="Phone 0790806650"><input id="lpp" type="password" placeholder="Password"><button onclick="doLogin()" style="width:100%;padding:12px;background:#ffcc00;border:0;border-radius:10px;font-weight:900;margin-top:6px">SIGN IN</button></div>
+<div id="fUp" style="display:none"><input id="rn" placeholder="Name AMOS"><input id="rp" placeholder="Phone"><input id="rpp" type="password" placeholder="Password min 4"><button onclick="doReg()" style="width:100%;padding:12px;background:#ffcc00;border:0;border-radius:10px;font-weight:900;margin-top:6px">CREATE ACCOUNT</button><br><small style="color:#888">Bonus KSh 100 Free</small></div>
+<div id="msg" style="color:#ff4444;font-size:12px;margin-top:8px"></div>
+</div>
+</div>
+
+<div class="header"><b style="color:#ffcc00">CODE CRASH</b><div><button id="rb" class="real-on" onclick="setAcc('real')">REAL</button><button id="db" class="off" onclick="setAcc('demo')">DEMO</button></div><b style="color:#ffcc00" id="topBal">KSh 500</b></div>
+
+<div id="tab-market" class="tab active">
+<div id="game"><div id="codes"></div><div id="timer">5.0s</div><div id="mult">1.00x</div></div>
+<div id="st" style="text-align:center;padding:6px;background:#0f0f1a;color:#aaa;font-size:11px">Place 3 bets - 5 sec</div>
+<div class="bet"><input id="s1" value="100" type="number"><button id="b1" onclick="bet(1)">BET 1</button></div>
+<div class="bet"><input id="s2" value="200" type="number"><button id="b2" onclick="bet(2)">BET 2</button></div>
+<div class="bet"><input id="s3" value="500" type="number"><button id="b3" onclick="bet(3)">BET 3</button></div>
+<div id="history" style="display:flex;gap:5px;padding:8px;overflow-x:auto"></div>
+</div>
+
+<div id="tab-account" class="tab">
+<div style="background:#151525;margin:10px;border-radius:14px;padding:16px;text-align:center;border:1px solid #222">
+<small style="color:#888" id="an">Player</small><h1 style="color:#ffcc00;margin:6px 0" id="big">KSh 500</h1><small id="ap" style="color:#666"></small>
+<div style="display:flex;gap:8px;margin-top:12px"><button onclick="deposit()" style="flex:1;padding:12px;background:#ffcc00;border:0;border-radius:10px;font-weight:900">DEPOSIT</button><button onclick="withdraw()" style="flex:1;padding:12px;background:#222;color:#fff;border:0;border-radius:10px;font-weight:900">WITHDRAW</button></div>
+</div>
+<div style="background:#151525;margin:8px;padding:10px;border-radius:10px;display:flex;justify-content:space-between"><span>Real Balance</span><b id="rbBal">KSh 500</b></div>
+<div style="background:#151525;margin:8px;padding:10px;border-radius:10px;display:flex;justify-content:space-between"><span>Demo Balance</span><b>KSh 10000</b></div>
+<div style="background:#2a1a00;margin:8px;padding:12px;border-radius:10px;border:1px solid #ffcc00"><small>My Profit (Admin)</small><br><b id="prof" style="color:#ffcc00">KSh 0</b></div>
+<small style="margin:10px;color:#666;display:block" id="till">Till Number: Not set - Click to set</small>
+<div style="text-align:center"><button onclick="logout()" style="background:0;border:0;color:#555;margin-top:10px">LOGOUT</button></div>
+</div>
+
+<div class="bottom"><button id="bm" class="active" onclick="showTab('market')">📈<br>MARKET</button><button id="ba" onclick="showTab('account')">👤<br>ACCOUNT</button></div>
+
+<script>
+let users=JSON.parse(localStorage.getItem('voxU')||'{}'),cur=localStorage.getItem('voxS'),acc={real:500,demo:10000},act='real',profit=0,mult=1,bets=[null,null,null],phase='bet',cd=5,hist=[2.3,1.1,4.5],cInt,till=localStorage.getItem('till')||'';
+function showA(t){document.getElementById('tb1').className=t=='in'?'t on':'t';document.getElementById('tb2').className=t=='up'?'t on':'t';document.getElementById('fIn').style.display=t=='in'?'block':'none';document.getElementById('fUp').style.display=t=='up'?'block':'none';}
+function doReg(){let n=rn.value,p=rp.value,pp=rpp.value;if(!n||!p||pp.length<4){msg.innerText='Fill all';return;}if(users[p]){msg.innerText='Exists, Sign In';return;}users[p]={name:n,pass:pp,real:100,demo:10000};localStorage.setItem('voxU',JSON.stringify(users));cur=p;localStorage.setItem('voxS',p);acc.real=100;after();}
+function doLogin(){let p=lp.value,pp=lpp.value;if(!users[p]||users[p].pass!=pp){msg.innerText='Wrong';return;}cur=p;localStorage.setItem('voxS',p);acc.real=users[p].real;acc.demo=users[p].demo;after();}
+function after(){auth.style.display='none';upd();startBet();}
+function save(){if(cur){users[cur].real=acc.real;localStorage.setItem('voxU',JSON.stringify(users));}}
+if(cur&&users[cur]){auth.style.display='none';acc.real=users[cur].real;}
+function setAcc(t){act=t;rb.className=t=='real'?'real-on':'off';db.className=t=='demo'?'real-on':'off';if(t=='demo'){db.style.background='#00c853';db.style.color='#fff';}upd();}
+function upd(){topBal.innerText='KSh '+Math.floor(acc[act]);big.innerText='KSh '+Math.floor(acc[act]);rbBal.innerText='KSh '+acc.real;prof.innerText='KSh '+profit;if(cur){an.innerText=users[cur].name;ap.innerText=cur;}till=till||prompt('Enter Till Number for M-PESA:')||'';if(till){localStorage.setItem('till',till);document.getElementById('till').innerText='Till Number: '+till+' (click to change)';}document.getElementById('till').onclick=()=>{let nt=prompt('New Till:',till);if(nt){till=nt;localStorage.setItem('till',till);document.getElementById('till').innerText='Till Number: '+till;}};save();}
+function showTab(n){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.bottom button').forEach(e=>e.classList.remove('active'));document.getElementById('tab-'+n).classList.add('active');document.getElementById('b'+n[0]).classList.add('active');}
+function updH(){history.innerHTML=hist.slice(-15).map(x=>`<span style="padding:4px 8px;border-radius:10px;background:${x<2?'#333':x<10?'#664d00':'#ffcc00'};color:${x>=10?'#000':'#fff'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
+function startC(){let c=document.getElementById('codes');cInt=setInterval(()=>{let e=document.createElement('div');e.className='code';e.style.left=Math.random()*90+'%';e.style.animationDuration=(2+Math.random()*2)+'s';e.innerText=['CODE','1.5x','KSh','WIN','5.2x'][Math.floor(Math.random()*5)];c.appendChild(e);setTimeout(()=>e.remove(),4000);},140);}
+function stopC(){clearInterval(cInt);codes.innerHTML='';}
+function startBet(){if(!cur) return;phase='bet';cd=5;mult=1;bets=[null,null,null];multE=document.getElementById('mult');multE.innerText='1.00x';multE.style.color='#ffcc00';multE.style.fontSize='75px';stopC();startC();[1,2,3].forEach(i=>{let b=document.getElementById('b'+i);b.innerText='BET '+i;b.style.background='#ffcc00';b.disabled=false;});let t=setInterval(()=>{cd-=0.1;timer.innerText=cd.toFixed(1)+'s';timer.style.display='block';if(cd<=0){clearInterval(t);timer.style.display='none';fly();}},100);}
+function fly(){phase='fly';st.innerText='🚀 Flying';let crash=act=='demo'?Math.random()*8+2:Math.random()<0.6?Math.random()*1.4+1:Math.random()*10+2;let sp=0.02;let f=setInterval(()=>{mult+=sp;sp+=0.0015+mult*0.0006;document.getElementById('mult').innerText=mult.toFixed(2)+'x';bets.forEach((b,i)=>{if(b){let btn=document.getElementById('b'+(i+1));btn.innerText='CASH '+(b*mult).toFixed(0);btn.style.background='#00ff88';}});if(mult>=crash){clearInterval(f);stopC();document.getElementById('mult').innerText='CRASH '+mult.toFixed(2)+'x';document.getElementById('mult').style.color='#ff1744';document.getElementById('mult').style.fontSize='32px';hist.push(mult);updH();bets.forEach((b,i)=>{if(b){if(act=='real') profit+=b;let btn=document.getElementById('b'+(i+1));btn.innerText='LOST';btn.style.background='#ff1744';}});st.innerText='💥 Crashed @ '+crash.toFixed(2)+'x';upd();setTimeout(startBet,3000);}},80);}
+function bet(n){let i=n-1;if(phase=='bet'){if(bets[i]) return;let a=parseInt(document.getElementById('s'+n).value);if(acc[act]<a){alert('Low balance');showTab('account');return;}acc[act]-=a;bets[i]=a;upd();let btn=document.getElementById('b'+n);btn.innerText='PLACED '+a;btn.style.background='#00c853';}else if(phase=='fly'&&bets[i]){let w=bets[i]*mult;acc[act]+=w;let btn=document.getElementById('b'+n);btn.innerText='WON '+Math.floor(w);btn.disabled=true;bets[i]=null;upd();}}
+function deposit(){let a=prompt('Deposit amount:');if(a){acc.real+=parseInt(a);upd();alert('Deposit KSh '+a+' - Pay to Till '+till);}}
+function withdraw(){if(acc.real<100){alert('Min 100');return;}let a=prompt('Withdraw amount Bal '+acc.real+':');if(!a) return;a=parseInt(a);if(a>acc.real){alert('No balance');return;}let p=prompt('M-PESA number:',cur);if(!p) return;acc.real-=a;upd();alert('Withdraw KSh '+a+' to '+p+' sent');}
+function logout(){localStorage.removeItem('voxS');location.reload();}
+upd();updH();if(cur&&users[cur]) startBet();
+document.getElementById('till').innerText=till?'Till Number: '+till:'Till Number: Not set - Click to set';
+</script>
+</body>
+</html>

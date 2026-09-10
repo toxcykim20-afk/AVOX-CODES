@@ -42,6 +42,7 @@
 .customPopup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:300;display:none;align-items:center;justify-content:center}
 .popupBox{background:#1a1a2e;border:2px solid #ffcc00;border-radius:20px;padding:25px;width:90%;max-width:350px;text-align:center}
 .popupBox h3{color:#ffcc00;margin:0 0 15px;font-size:18px}
+.popupBox p{color:#aaa;font-size:14px;margin:10px 0}
 .popupBox input{width:100%;padding:15px;margin:10px 0;background:#0a0a0f;border:2px solid #333;border-radius:12px;color:white;font-size:16px;text-align:center}
 .popupBox input:focus{border-color:#ffcc00;outline:0}
 .popupBtns{display:flex;gap:10px;margin-top:15px}
@@ -67,9 +68,9 @@
 <!-- CUSTOM POPUP -->
 <div id="customPopup" class="customPopup">
   <div class="popupBox">
-    <h3 id="popupTitle">DEPOSIT</h3>
-    <p id="popupText" style="color:#aaa;font-size:14px;margin:10px 0">Enter no</p>
-    <input id="popupInput" type="text" placeholder="07XXXXXXXX">
+    <h3 id="popupTitle">TITLE</h3>
+    <p id="popupText">TEXT</p>
+    <input id="popupInput" type="number" placeholder="0">
     <div class="popupBtns">
       <button class="popupBtn btnCancel" onclick="closePopup()">CANCEL</button>
       <button class="popupBtn btnOk" onclick="submitPopup()">OK</button>
@@ -159,14 +160,11 @@ let users=JSON.parse(localStorage.getItem('voxUsers')||'{}');
 let lambAudio = document.getElementById('lambSound');
 let popupCallback = null;
 
-function openMenu(){document.getElementById('moreMenu').style.display='block';document.getElementById('overlay').style.display='block';if(currentUser){document.getElementById('menuName').innerText=users[currentUser].name;document.getElementById('menuEmail').innerText=currentUser;}}
-function closeMenu(){document.getElementById('moreMenu').style.display='none';document.getElementById('overlay').style.display='none';}
-function menuAlert(title,desc){alert(title+'\n\n'+desc+'\n\nThis feature will be added soon.');closeMenu();}
-
-// CUSTOM POPUP FUNCTIONS
-function showPopup(title, text, callback){
+// CUSTOM POPUP - HAKUNA LINK
+function showPopup(title, text, type, callback){
   document.getElementById('popupTitle').innerText = title;
-  document.getElementById('popupText').innerText = text; // "Enter no" pekee
+  document.getElementById('popupText').innerText = text;
+  document.getElementById('popupInput').type = type;
   document.getElementById('popupInput').value = '';
   document.getElementById('customPopup').style.display = 'flex';
   popupCallback = callback;
@@ -177,6 +175,15 @@ function submitPopup(){
   closePopup();
   if(popupCallback) popupCallback(val);
 }
+function showMsg(msg){
+  showPopup('INFO', msg, 'hidden', function(){});
+  document.getElementById('popupInput').style.display='none';
+  document.querySelector('.btnCancel').style.display='none';
+}
+
+function openMenu(){document.getElementById('moreMenu').style.display='block';document.getElementById('overlay').style.display='block';if(currentUser){document.getElementById('menuName').innerText=users[currentUser].name;document.getElementById('menuEmail').innerText=currentUser;}}
+function closeMenu(){document.getElementById('moreMenu').style.display='none';document.getElementById('overlay').style.display='none';}
+function menuAlert(title,desc){showMsg(title+'\n\n'+desc);closeMenu();}
 
 function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
 function doRegister(){let name=document.getElementById('regName').value, phone=document.getElementById('regPhone').value, pass=document.getElementById('regPass').value;if(!name||!phone||pass.length<4){document.getElementById('authMsg').innerText='Fill all fields, password min 4'; return;}if(users[phone]){document.getElementById('authMsg').innerText='Number already registered, Sign In'; return;}users[phone]={name:name, pass:pass, real:100, demo:10000}; localStorage.setItem('voxUsers', JSON.stringify(users));currentUser=phone; acc.real=100; acc.demo=10000; localStorage.setItem('voxSession', phone); afterLogin();}
@@ -211,13 +218,12 @@ function startCodesUp(){
   lambAudio.volume = 0.4;
   lambAudio.play().catch(e=>console.log('Audio blocked:',e));
 
-  // SPEED X2 - NIMEPUNGUZA KUTOKA 0.025 HADI 0.05
   let crashPoint=active=='demo'?Math.random()*12+2:Math.random()<0.6?Math.random()*1.8+1:Math.random()*20+2;
   let startTime = Date.now();
 
   let fly=setInterval(()=>{
     let elapsed = (Date.now() - startTime) / 1000;
-    mult = Math.pow(Math.E, 0.05 * elapsed); // MARA MBILI FASTER
+    mult = Math.pow(Math.E, 0.05 * elapsed);
 
     document.getElementById('mult').innerText=mult.toFixed(2)+'x';
     document.getElementById('mult').style.fontSize=(60 + mult*2)+'px';
@@ -233,43 +239,37 @@ function startCodesUp(){
       document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();
       setTimeout(startBetting,3000);
     }
-  },50); // 50ms
+  },50);
 }
-function bet(slot){let i=slot-1;if(phase=='betting'){if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);if(acc[active]<amt){alert('Low balance'); showTab('account'); return;}acc[active]-=amt; bets[i]={amount:amt}; updateBal();document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';}else if(phase=='flying' && bets[i]){let win=bets[i].amount*mult; acc[active]+=win;document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled=true; bets[i]=null; updateBal();}}
+function bet(slot){let i=slot-1;if(phase=='betting'){if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);if(acc[active]<amt){showMsg('Low balance'); showTab('account'); return;}acc[active]-=amt; bets[i]={amount:amt}; updateBal();document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';}else if(phase=='flying' && bets[i]){let win=bets[i].amount*mult; acc[active]+=win;document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled=true; bets[i]=null; updateBal();}}
 
-// DEPOSIT NA CUSTOM POPUP
+// DEPOSIT - AMOUNT TU
 function deposit(){
-  showPopup('DEPOSIT', 'Enter no', function(phone){
-    if(!phone) return;
-    if(phone.length < 10){ alert('Enter valid phone 07XXXXXXXX'); return; }
-    showPopup('AMOUNT', 'Enter amount', function(amount){
-      if(!amount) return;
-      amount = parseInt(amount);
-      if(amount < 50){ alert('Minimum deposit is KSh 50'); return; }
-      acc.real += amount; myProfit += amount; updateBal();
-      alert('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+phone+'\nTo Till: 123456');
-      let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');
-      deps.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});
-      localStorage.setItem('depositReqs', JSON.stringify(deps));
-    });
+  showPopup('DEPOSIT', 'Amount', 'number', function(amount){
+    if(!amount) return;
+    amount = parseInt(amount);
+    if(amount < 50){ showMsg('Minimum deposit is KSh 50'); return; }
+    acc.real += amount; myProfit += amount; updateBal();
+    showMsg('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+currentUser+'\nTo Till: 123456');
+    let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');
+    deps.push({name:users[currentUser].name, phone:currentUser, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});
+    localStorage.setItem('depositReqs', JSON.stringify(deps));
   });
 }
 
+// WITHDRAW - AMOUNT TU
 function withdraw(){
-  if(acc.real < 100){ alert('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }
-  showPopup('WITHDRAW', 'Enter amount', function(amount){
+  if(acc.real < 100){ showMsg('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }
+  showPopup('WITHDRAW', 'Amount', 'number', function(amount){
     if(!amount) return;
     amount = parseInt(amount);
-    if(amount < 100){ alert('Minimum is 100'); return; }
-    if(amount > acc.real){ alert('You only have KSh '+acc.real); return; }
-    showPopup('M-PESA NO', 'Enter no', function(phone){
-      if(!phone) return;
-      acc.real -= amount; updateBal();
-      alert('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+phone);
-      let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');
-      reqs.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});
-      localStorage.setItem('withdrawReqs', JSON.stringify(reqs));
-    });
+    if(amount < 100){ showMsg('Minimum is 100'); return; }
+    if(amount > acc.real){ showMsg('You only have KSh '+acc.real); return; }
+    acc.real -= amount; updateBal();
+    showMsg('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+currentUser);
+    let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');
+    reqs.push({name:users[currentUser].name, phone:currentUser, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});
+    localStorage.setItem('withdrawReqs', JSON.stringify(reqs));
   });
 }
 

@@ -1,225 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVOX CODES</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AVOX TRADING</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0a0f1e;color:white;min-height:100vh}
-.header{background:#111a32;padding:15px;text-align:center;border-bottom:2px solid #00ff88}
-.header h1{color:#00ff88;letter-spacing:2px}
-.container{max-width:400px;margin:20px auto;padding:15px}
-.card{background:#151f3d;border-radius:15px;padding:20px;margin-bottom:15px;border:1px solid #1e2d5a}
-input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none;background:#0d142b;color:white;outline:none;border:1px solid #2a3a6a}
-button{width:100%;padding:12px;border:none;border-radius:8px;background:#00ff88;color:#000;font-weight:bold;cursor:pointer;margin-top:10px;font-size:16px}
-button:active{transform:scale(0.98)}
-button.secondary{background:transparent;color:#00ff88;border:1px solid #00ff88}
-.nav{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
-.nav button{flex:1;min-width:70px;padding:10px;font-size:13px}
-.page{display:none}
-.page.active{display:block}
-.msg{min-height:20px;margin:10px 0;font-size:14px;text-align:center}
-.balance{font-size:28px;color:#00ff88;text-align:center;margin:10px 0}
-.label{color:#8a9bb5;font-size:12px}
-.value{font-size:16px;margin-bottom:10px}
-.till-box{background:#0d142b;padding:12px;border-radius:8px;margin:10px 0;display:flex;justify-content:space-between;align-items:center}
+body{background:#000;color:#fff;font-family:Inter,sans-serif}
+.card{background:#1A1A1A}
+.green-bar{background:#0F3D26}
+.icon-bg{background:#2A2A2A}
 </style>
 </head>
 <body>
-<div class="header"><h1>AVOX CODES</h1></div>
-<div class="container">
+<div class="max-w-[430px] mx-auto min-h-screen flex flex-col">
 
-<!-- LOGIN -->
-<div id="loginPage" class="page active">
-  <div class="card">
-    <h2 style="text-align:center;margin-bottom:15px">SIGN IN</h2>
-    <input id="loginPhone" placeholder="Phone Number (e.g 0790806650)" type="tel">
-    <input id="loginPass" placeholder="Password" type="password">
-    <div id="loginMsg" class="msg"></div>
-    <button onclick="signIn()">SIGN IN</button>
-    <button class="secondary" onclick="showPage('register')">No account? SIGN UP</button>
-  </div>
+<!-- TOP REAL BADGE -->
+<div class="flex justify-center pt-2"><span class="bg-[#1DB954] text-[11px] px-4 py-1 rounded-full font-bold">Real</span></div>
+
+<!-- PHASE: TRADE (Chart) -->
+<div id="phase-trade" class="phase flex-1">
+<div class="flex justify-between p-4"><b class="tracking-[3px] text-[13px]">AVOX TRADING</b><span id="price" class="text-[#7FFF7F] font-bold text-[13px]">$--</span></div>
+<div id="chart" class="w-full h-[60vh] bg-[#0f0f1f]"></div>
+<div class="flex gap-2 p-3"><button onclick="trade('BUY')" class="bg-[#22c55e] w-1/2 py-5 rounded-xl font-black">BUY</button><button onclick="trade('SELL')" class="bg-[#ef4444] w-1/2 py-5 rounded-xl font-black">SELL</button></div>
+<p id="status" class="text-center text-[12px] text-yellow-300 h-4"></p>
 </div>
 
-<!-- REGISTER -->
-<div id="registerPage" class="page">
-  <div class="card">
-    <h2 style="text-align:center;margin-bottom:15px">SIGN UP</h2>
-    <input id="regName" placeholder="Full Name">
-    <input id="regPhone" placeholder="Phone Number" type="tel">
-    <input id="regPass" placeholder="Password (min 4)" type="password">
-    <div id="regMsg" class="msg"></div>
-    <button onclick="signUp()">CREATE ACCOUNT</button>
-    <button class="secondary" onclick="showPage('login')">Have account? SIGN IN</button>
-  </div>
+<!-- PHASE: FUNDS - EXACT LIKE YOUR SCREENSHOT -->
+<div id="phase-funds" class="phase flex-1 p-4" style="display:block">
+<!-- Equity Card -->
+<div class="card rounded-2xl p-5">
+<div class="flex justify-between"><span class="text-[#9A9A9A] text-[14px]">Equity</span><span class="w-6 h-6 rounded-full border border-[#3A3A3A] flex items-center justify-center text-[12px]">i</span></div>
+<div class="text-[28px] font-bold mt-1">$<span id="equity">0.00</span></div>
+<div class="mt-5 space-y-2 text-[13px]">
+<div class="flex justify-between"><span class="text-[#9A9A9A]">Balance</span><span id="balText">$0.00</span></div>
+<div class="flex justify-between"><span class="text-[#9A9A9A]">Free margin</span><span id="marginText">$0.00</span></div>
+<div class="flex justify-between mt-3"><span class="text-[#9A9A9A]">Pending deposit</span><span id="pendingText" class="font-bold">+$759.16</span></div>
+</div>
 </div>
 
-<!-- MARKET -->
-<div id="marketPage" class="page">
-  <div class="nav">
-    <button onclick="showPage('market')" style="background:#00ff88;color:#000">MARKET</button>
-    <button class="secondary" onclick="showPage('account')">ACCOUNT</button>
-    <button class="secondary" onclick="showPage('deposit')">DEPOSIT</button>
-    <button class="secondary" onclick="showPage('withdraw')">WITHDRAW</button>
-    <button class="secondary" onclick="logout()">LOGOUT</button>
-  </div>
-  <div class="card">
-    <div class="label">WELCOME</div>
-    <div id="marketName" class="value">Player</div>
-    <div class="balance" id="marketBalance">KES 0</div>
-    <div style="text-align:center;color:#8a9bb5;font-size:13px">Profit: <span id="marketProfit" style="color:#00ff88">KES 0</span></div>
-    <hr style="margin:15px 0;border:0;border-top:1px solid #1e2d5a">
-    <p style="text-align:center;color:#8a9bb5">🔥 Aviator Market Coming Soon - You can trade here</p>
-    <button onclick="alert('Market game loading...')">PLAY AVIATOR</button>
-  </div>
+<!-- Deposit Withdraw Green Bar -->
+<div class="green-bar rounded-2xl mt-4 flex p-4">
+<button onclick="openDeposit()" class="flex-1 flex flex-col items-center gap-2"><span class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black text-[20px] font-bold">+</span><span class="text-[13px] font-bold">Deposit</span></button>
+<button onclick="openWithdraw()" class="flex-1 flex flex-col items-center gap-2"><span class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black text-[20px]">↑</span><span class="text-[13px] font-bold">Withdraw</span></button>
 </div>
 
-<!-- ACCOUNT -->
-<div id="accountPage" class="page">
-  <div class="nav">
-    <button class="secondary" onclick="showPage('market')">MARKET</button>
-    <button onclick="showPage('account')" style="background:#00ff88;color:#000">ACCOUNT</button>
-    <button class="secondary" onclick="showPage('deposit')">DEPOSIT</button>
-    <button class="secondary" onclick="showPage('withdraw')">WITHDRAW</button>
-  </div>
-  <div class="card">
-    <h3>MY ACCOUNT</h3><br>
-    <div class="label">Name</div><div id="accName" class="value">-</div>
-    <div class="label">Phone</div><div id="accPhone" class="value">-</div>
-    <div class="label">Balance</div><div id="accBalance" class="value" style="color:#00ff88">KES 0</div>
-    <div class="till-box">
-      <div><div class="label">Till Number</div><div id="accTill">Not set</div></div>
-      <button style="width:auto;padding:6px 12px;font-size:12px" onclick="setTill()">SET</button>
-    </div>
-  </div>
+<!-- Transaction History -->
+<div class="mt-6">
+<p class="text-[#9A9A9A] text-[13px]">Today</p>
+<div id="todayList" class="mt-2 space-y-4"></div>
+
+<p class="text-[#9A9A9A] text-[13px] mt-8">June 10, 2026</p>
+<div class="mt-3 space-y-4">
+<div class="flex justify-between items-center">
+<div class="flex gap-3 items-center"><div class="relative"><div class="icon-bg w-11 h-11 rounded-full flex items-center justify-center">↑</div><span class="absolute -bottom-1 -right-1 bg-[#22c55e] w-5 h-5 rounded-full flex items-center justify-center text-[10px]">✓</span></div><div><div class="font-bold text-[14px]">Withdrawal</div><div class="text-[#9A9A9A] text-[12px]">Mobile Money MPesa</div></div></div>
+<div class="font-bold text-[14px]">-$6.33</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex gap-3 items-center"><div class="relative"><div class="icon-bg w-11 h-11 rounded-full flex items-center justify-center">+</div><span class="absolute -bottom-1 -right-1 bg-[#22c55e] w-5 h-5 rounded-full flex items-center justify-center text-[10px]">✓</span></div><div><div class="font-bold text-[14px]">Deposit</div><div class="text-[#9A9A9A] text-[12px]">Mobile Money MPesa</div></div></div>
+<div class="font-bold text-[14px]">+$6.06</div>
+</div>
+</div>
+</div>
 </div>
 
-<!-- DEPOSIT -->
-<div id="depositPage" class="page">
-  <div class="nav">
-    <button class="secondary" onclick="showPage('market')">MARKET</button>
-    <button class="secondary" onclick="showPage('account')">ACCOUNT</button>
-    <button onclick="showPage('deposit')" style="background:#00ff88;color:#000">DEPOSIT</button>
-    <button class="secondary" onclick="showPage('withdraw')">WITHDRAW</button>
-  </div>
-  <div class="card">
-    <h3>DEPOSIT</h3><br>
-    <div class="label">Till: <span id="depTill" style="color:#00ff88">Not set - Go to Account to set</span></div><br>
-    <input id="depAmount" placeholder="Amount KES" type="number">
-    <input id="depCode" placeholder="M-Pesa Code">
-    <button onclick="doDeposit()">SUBMIT DEPOSIT</button>
-    <p style="font-size:12px;color:#8a9bb5;margin-top:10px;text-align:center">Admin will approve in 5 mins</p>
-  </div>
+<!-- PHASE: POSITIONS -->
+<div id="phase-positions" class="phase flex-1 p-4 hidden"><h2 class="font-bold">Open Positions</h2><div id="posList" class="mt-4 text-[12px] text-[#9A9A9A]">No open trades yet</div></div>
+
+<!-- PHASE: MORE -->
+<div id="phase-more" class="phase flex-1 p-4 hidden">
+<button class="w-full bg-[#1A1A1A] p-4 rounded-xl text-left mt-2">📅 Economic Calendar</button>
+<button class="w-full bg-[#1A1A1A] p-4 rounded-xl text-left mt-2">👤 Profile & Security</button>
+<button onclick="localStorage.clear();location.reload()" class="w-full bg-[#1A1A1A] p-4 rounded-xl text-left mt-2">Logout</button>
 </div>
 
-<!-- WITHDRAW -->
-<div id="withdrawPage" class="page">
-  <div class="nav">
-    <button class="secondary" onclick="showPage('market')">MARKET</button>
-    <button class="secondary" onclick="showPage('account')">ACCOUNT</button>
-    <button class="secondary" onclick="showPage('deposit')">DEPOSIT</button>
-    <button onclick="showPage('withdraw')" style="background:#00ff88;color:#000">WITHDRAW</button>
-  </div>
-  <div class="card">
-    <h3>WITHDRAW</h3><br>
-    <div class="balance" id="withBalance">KES 0</div>
-    <input id="withAmount" placeholder="Amount KES" type="number">
-    <button onclick="doWithdraw()">REQUEST WITHDRAWAL</button>
-  </div>
+<!-- BOTTOM NAV - SAME AS SCREENSHOT -->
+<div class="grid grid-cols-4 border-t border-[#222] py-2 text-center bg-black sticky bottom-0">
+<button onclick="showPhase('trade')" id="nav-trade" class="flex flex-col items-center opacity-60"><span class="text-[22px]">📈</span><span class="text-[11px] mt-1">Trade</span></button>
+<button onclick="showPhase('positions')" id="nav-positions" class="flex flex-col items-center opacity-60"><span class="text-[22px]">📋</span><span class="text-[11px] mt-1">Positions</span></button>
+<button onclick="showPhase('funds')" id="nav-funds" class="flex flex-col items-center text-[#1DB954]"><span class="text-[22px]">💳</span><span class="text-[11px] mt-1">Funds</span></button>
+<button onclick="showPhase('more')" id="nav-more" class="flex flex-col items-center opacity-60"><span class="text-[22px]">⋯</span><span class="text-[11px] mt-1">More</span></button>
+</div>
 </div>
 
-</div>
 <script>
-function showPage(p){
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.getElementById(p+'Page').classList.add('active');
-  if(p==='market'||p==='account'||p==='deposit'||p==='withdraw') updateAccount();
+// --- NAV LOGIC ---
+function showPhase(p){
+document.querySelectorAll('.phase').forEach(e=>e.style.display='none');
+document.getElementById('phase-'+p).style.display='block';
+document.querySelectorAll('[id^=nav-]').forEach(e=>{e.classList.remove('text-[#1DB954]');e.classList.add('opacity-60')});
+document.getElementById('nav-'+p).classList.add('text-[#1DB954]');
+document.getElementById('nav-'+p).classList.remove('opacity-60');
+if(p=='trade' && chart) setTimeout(()=>chart.timeScale().fitContent(),100);
 }
-function signUp(){
-  const name=document.getElementById('regName').value.trim();
-  const phone=document.getElementById('regPhone').value.trim();
-  const pass=document.getElementById('regPass').value.trim();
-  const msg=document.getElementById('regMsg');
-  if(!name||!phone||!pass){msg.innerHTML='<span style="color:orange">Fill all fields</span>';alert('Fill all fields');return;}
-  if(pass.length<4){msg.innerHTML='<span style="color:orange">Password min 4 chars</span>';return;}
-  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
-  if(users.find(u=>u.phone===phone)){msg.innerHTML='<span style="color:orange">Phone exists, Sign In now</span>';alert('This phone already has account. Go SIGN IN');showPage('login');return;}
-  let newUser={name,phone,pass,balance:0,profit:0,till:''};
-  users.push(newUser);
-  localStorage.setItem('vox_users',JSON.stringify(users));
-  localStorage.setItem('vox_current',JSON.stringify(newUser));
-  msg.innerHTML='<span style="color:#0f0">Created! Loading...</span>';
-  alert('Account created on THIS device!');
-  showPage('market');
+let bal = parseFloat(localStorage.getItem('avox_bal')||'0');
+let pending = parseFloat(localStorage.getItem('avox_pending')||'759.16');
+let history = JSON.parse(localStorage.getItem('avox_hist')||'[]');
+function renderHistory(){
+let html = '';
+if(history.length==0){
+// Default from screenshot - pending
+html = `
+<div class="flex justify-between items-center"><div class="flex gap-3 items-center"><div class="relative"><div class="icon-bg w-11 h-11 rounded-full flex items-center justify-center">+</div><span class="absolute -bottom-1 -right-1 bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-[10px]">✕</span></div><div><div class="font-bold text-[14px]">Deposit</div><div class="text-[#9A9A9A] text-[12px]">Mobile Money</div></div></div><div class="font-bold text-[14px]">+$759.16</div></div>
+<div class="flex justify-between items-center"><div class="flex gap-3 items-center"><div class="relative"><div class="icon-bg w-11 h-11 rounded-full flex items-center justify-center">+</div><span class="absolute -bottom-1 -right-1 bg-[#2A2A2A] w-5 h-5 rounded-full flex items-center justify-center text-[9px]">◷</span></div><div><div class="font-bold text-[14px]">Deposit</div><div class="text-[#9A9A9A] text-[12px]">Mobile Money</div></div></div><div class="font-bold text-[14px]">+$759.16</div></div>
+`;
+}else{
+history.forEach(h=>{
+html+=`<div class="flex justify-between items-center"><div class="flex gap-3 items-center"><div class="relative"><div class="icon-bg w-11 h-11 rounded-full flex items-center justify-center">${h.type=='Withdrawal'?'↑':'+'}</div><span class="absolute -bottom-1 -right-1 ${h.status=='ok'?'bg-[#22c55e]':'bg-[#2A2A2A]'} w-5 h-5 rounded-full flex items-center justify-center text-[10px]">${h.status=='ok'?'✓':'◷'}</span></div><div><div class="font-bold text-[14px]">${h.type}</div><div class="text-[#9A9A9A] text-[12px]">Mobile Money MPesa</div></div></div><div class="font-bold text-[14px]">${h.amount}</div></div>`;
+});
 }
-function signIn(){
-  const phone=document.getElementById('loginPhone').value.trim();
-  const pass=document.getElementById('loginPass').value.trim();
-  const msg=document.getElementById('loginMsg');
-  if(!phone||!pass){msg.innerHTML='<span style="color:orange">Enter phone + password</span>';alert('Enter phone and password');return;}
-  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
-  let found=users.find(u=>u.phone===phone && u.pass===pass);
-  if(found){
-    localStorage.setItem('vox_current',JSON.stringify(found));
-    msg.innerHTML='<span style="color:#0f0">Success! Loading...</span>';
-    setTimeout(()=>{showPage('market');},400);
-  }else{
-    let phoneExists=users.find(u=>u.phone===phone);
-    if(phoneExists){
-      msg.innerHTML='<span style="color:red">Wrong password!</span>';
-      alert('Wrong password for '+phone);
-    }else{
-      msg.innerHTML='<span style="color:red">Not found on THIS device. Please SIGN UP first!</span>';
-      alert('No account on this device. Click SIGN UP to create account on this phone/laptop first!');
-    }
-  }
+document.getElementById('todayList').innerHTML = html;
+document.getElementById('balText').innerText = '$' + bal.toFixed(2);
+document.getElementById('equity').innerText = bal.toFixed(2);
+document.getElementById('marginText').innerText = '$' + bal.toFixed(2);
+document.getElementById('pendingText').innerText = '+$' + pending.toFixed(2);
 }
-function updateAccount(){
-  let cur=JSON.parse(localStorage.getItem('vox_current')||'null');
-  if(!cur){showPage('login');return;}
-  // refresh from users list
-  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
-  let fresh=users.find(u=>u.phone===cur.phone)||cur;
-  document.getElementById('marketName').innerText=fresh.name;
-  document.getElementById('marketBalance').innerText='KES '+fresh.balance;
-  document.getElementById('marketProfit').innerText='KES '+fresh.profit;
-  document.getElementById('accName').innerText=fresh.name;
-  document.getElementById('accPhone').innerText=fresh.phone;
-  document.getElementById('accBalance').innerText='KES '+fresh.balance;
-  document.getElementById('accTill').innerText=fresh.till||'Not set';
-  document.getElementById('depTill').innerText=fresh.till||'Not set - Go to Account to set';
-  document.getElementById('withBalance').innerText='KES '+fresh.balance;
+renderHistory();
+
+function openDeposit(){
+let amt = prompt('Enter deposit amount USD:','50');
+if(!amt) return;
+pending += parseFloat(amt);
+let entry = {type:'Deposit', amount:'+$'+parseFloat(amt).toFixed(2), status:'wait'};
+history.unshift(entry);
+localStorage.setItem('avox_pending',pending);
+localStorage.setItem('avox_hist',JSON.stringify(history));
+renderHistory();
+alert('Deposit request created - Pending +$' + amt);
 }
-function setTill(){
-  let t=prompt('Enter your M-Pesa Till Number:');
-  if(!t) return;
-  let cur=JSON.parse(localStorage.getItem('vox_current'));
-  let users=JSON.parse(localStorage.getItem('vox_users')||'[]');
-  let idx=users.findIndex(u=>u.phone===cur.phone);
-  if(idx>=0){users[idx].till=t;cur.till=t;localStorage.setItem('vox_users',JSON.stringify(users));localStorage.setItem('vox_current',JSON.stringify(cur));updateAccount();alert('Till saved: '+t);}
+function openWithdraw(){
+if(bal<5) return alert('Insufficient balance');
+let amt = prompt('Withdraw amount:','10');
+if(!amt) return;
+bal -= parseFloat(amt);
+history.unshift({type:'Withdrawal', amount:'-$'+parseFloat(amt).toFixed(2), status:'ok'});
+localStorage.setItem('avox_bal',bal);
+localStorage.setItem('avox_hist',JSON.stringify(history));
+renderHistory();
 }
-function doDeposit(){
-  let amt=document.getElementById('depAmount').value;
-  let code=document.getElementById('depCode').value;
-  if(!amt||!code){alert('Enter amount and M-Pesa code');return;}
-  alert('Deposit request KES '+amt+' Code: '+code+' received! Admin will approve.');
-  document.getElementById('depAmount').value='';document.getElementById('depCode').value='';
+
+// --- REAL CHART ---
+let price=0, candleData=[], candleSeries;
+let chart = LightweightCharts.createChart(document.getElementById('chart'),{layout:{background:{color:'#0f0f1f'},textColor:'#888'},grid:{vertLines:{color:'#1a1a2a'},horzLines:{color:'#1a1a2a'}},width:430,height:400});
+candleSeries = chart.addCandlestickSeries({upColor:'#22c55e',downColor:'#ef4444',borderVisible:false,wickUpColor:'#22c55e',wickDownColor:'#ef4444'});
+async function load(){let r=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100');let j=await r.json();candleData=j.map(k=>({time:k[0]/1000,open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));candleSeries.setData(candleData);price=candleData.at(-1).close;document.getElementById('price').innerText='$'+price.toFixed(2);chart.timeScale().fitContent();
+setInterval(async()=>{try{let r2=await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');price=+((await r2.json()).price);document.getElementById('price').innerText='$'+price.toFixed(2);let last=candleData.at(-1);last.close=price;if(price>last.high)last.high=price;if(price<last.low)last.low=price;candleSeries.update(last);}catch(e){}},2000);
 }
-function doWithdraw(){
-  let amt=parseFloat(document.getElementById('withAmount').value);
-  let cur=JSON.parse(localStorage.getItem('vox_current'));
-  if(!amt||amt<=0){alert('Enter amount');return;}
-  if(amt>cur.balance){alert('Insufficient balance. Balance: '+cur.balance);return;}
-  alert('Withdraw KES '+amt+' requested! Will be sent to '+cur.phone);
-  document.getElementById('withAmount').value='';
+load();
+function trade(dir){
+document.getElementById('status').innerText = dir + ' OPEN @ $' + price.toFixed(2) + ' - 8 sec';
+setTimeout(()=>{
+let win = Math.random()>0.4; let profit = win? 5 : -5; bal+=profit;
+localStorage.setItem('avox_bal',bal); renderHistory();
+document.getElementById('status').innerText = win? 'WIN +$'+profit : 'LOSS $'+profit;
+document.getElementById('posList').innerHTML = `<div>${dir} ${win?'WIN':'LOSS'} $${profit}</div>` + document.getElementById('posList').innerHTML;
+},8000);
 }
-function logout(){localStorage.removeItem('vox_current');showPage('login');}
-// auto login if already
-(function(){
-  let cur=localStorage.getItem('vox_current');
-  if(cur){showPage('market');}
-})();
+showPhase('funds');
 </script>
 </body>
 </html>

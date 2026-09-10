@@ -24,13 +24,11 @@
 .bottom button{flex:1;background:0;border:0;color:#888;padding:8px;font-size:11px;font-weight:700}
 .bottom button.active{color:#ffcc00;border-top:3px solid #ffcc00}
 
-/* V8 LOGIN WITH REAL CAR */
+/* CLEAN LOGIN */
 #authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center, #0a0a1a 0%, #000 100%);z-index:100;display:flex;align-items:center;justify-content:center}
-.authBox{background:linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);border:2px solid #ffcc00;border-radius:24px;padding:25px;width:92%;max-width:380px;text-align:center;box-shadow:0 0 50px rgba(255,204,0,0.4)}
+.authBox{background:linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);border:2px solid #ffcc00;border-radius:24px;padding:30px 25px;width:92%;max-width:380px;text-align:center;box-shadow:0 0 50px rgba(255,204,0,0.4)}
 
-.car-container{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
-.car-img{width:45px;height:25px;filter:drop-shadow(0 0 10px #ff0000)}
-.v8-text{font-size:40px;font-weight:900;color:#ffcc00;letter-spacing:8px;text-shadow:0 0 20px #ffcc00}
+.v8-text{font-size:42px;font-weight:900;color:#ffcc00;letter-spacing:8px;text-shadow:0 0 20px #ffcc00;margin-bottom:8px}
 
 .authBox h2{color:#ffcc00;margin:5px 0;font-size:26px;letter-spacing:2px;text-shadow:0 0 15px #ffcc00}
 .authBox small{color:#aaa;font-size:12px}
@@ -73,13 +71,10 @@
   <div class="menu-item" onclick="menuAlert('Legal Documents','Terms, Privacy Policy, Risk Disclosure')"><div class="menu-icon">📄</div><div class="menu-text"><b>Legal Documents</b><small>Terms, Privacy Policy, Risk Disclosure</small></div><div style="margin-left:auto">›</div></div>
 </div>
 
-<!-- V8 LOGIN WITH REAL CAR IMAGE -->
+<!-- CLEAN LOGIN -->
 <div id="authOverlay">
   <div class="authBox">
-    <div class="car-container">
-      <img src="https://i.imgur.com/8zYq3pL.png" class="car-img"> <!-- RED LAMBORGHINI -->
-      <div class="v8-text">V8</div>
-    </div>
+    <div class="v8-text">V8</div> <!-- NO IMAGE HERE -->
     
     <h2>AVOX CODES</h2>
     <small>Codes Crash Game V8 Edition</small>
@@ -90,15 +85,15 @@
     </div>
     
     <div id="formSignIn">
-      <input id="loginPhone" placeholder="📱 Phone Number e.g 07...">
-      <input id="loginPass" type="password" placeholder="🔒 Password">
+      <input id="loginPhone" placeholder="Phone Number e.g 07..."> <!-- NO ICON -->
+      <input id="loginPass" type="password" placeholder="Password"> <!-- NO ICON -->
       <button class="authBtn" onclick="doLogin()">SIGN IN</button>
     </div>
     
     <div id="formSignUp" style="display:none">
-      <input id="regName" placeholder="👤 Full Name">
-      <input id="regPhone" placeholder="📱 Phone 07...">
-      <input id="regPass" type="password" placeholder="🔒 Create Password">
+      <input id="regName" placeholder="Full Name">
+      <input id="regPhone" placeholder="Phone 07...">
+      <input id="regPass" type="password" placeholder="Create Password">
       <button class="authBtn" onclick="doRegister()">CREATE ACCOUNT</button>
       <div class="bonus-tag">🎁 Bonus: KSh 100 Free</div>
     </div>
@@ -158,13 +153,7 @@ function menuAlert(title,desc){alert(title+'\n\n'+desc+'\n\nThis feature will be
 function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
 function doRegister(){let name=document.getElementById('regName').value, phone=document.getElementById('regPhone').value, pass=document.getElementById('regPass').value;if(!name||!phone||pass.length<4){document.getElementById('authMsg').innerText='Fill all fields, password min 4'; return;}if(users[phone]){document.getElementById('authMsg').innerText='Number already registered, Sign In'; return;}users[phone]={name:name, pass:pass, real:100, demo:10000}; localStorage.setItem('voxUsers', JSON.stringify(users));currentUser=phone; acc.real=100; acc.demo=10000; localStorage.setItem('voxSession', phone); afterLogin();}
 function doLogin(){let phone=document.getElementById('loginPhone').value, pass=document.getElementById('loginPass').value;if(!users[phone]||users[phone].pass!=pass){document.getElementById('authMsg').innerText='Wrong phone or password'; return;}currentUser=phone; acc.real=users[phone].real; acc.demo=users[phone].demo; localStorage.setItem('voxSession', phone); afterLogin();}
-function afterLogin(){
-  document.getElementById('authOverlay').style.display='none';
-  lambAudio.pause(); // STOP SOUND
-  document.getElementById('accName').innerText=users[currentUser].name;
-  document.getElementById('accPhone').innerText=currentUser;
-  updateBal(); startBetting();
-}
+function afterLogin(){document.getElementById('authOverlay').style.display='none';lambAudio.pause();document.getElementById('accName').innerText=users[currentUser].name;document.getElementById('accPhone').innerText=currentUser;updateBal(); startBetting();}
 function logout(){localStorage.removeItem('voxSession'); location.reload();}
 function saveUser(){if(currentUser){users[currentUser].real=acc.real; users[currentUser].demo=acc.demo; localStorage.setItem('voxUsers', JSON.stringify(users));}}
 let sess=localStorage.getItem('voxSession'); if(sess && users[sess]){currentUser=sess; acc.real=users[sess].real; acc.demo=users[sess].demo; document.getElementById('authOverlay').style.display='none'; document.getElementById('accName').innerText=users[currentUser].name; document.getElementById('accPhone').innerText=currentUser;}
@@ -177,45 +166,9 @@ function updateHist(){document.getElementById('history').innerHTML=hist.slice(-1
 function startCodes(){const c=document.getElementById('codes'); codeInt=setInterval(()=>{let el=document.createElement('div'); el.className='code'; el.style.left=Math.random()*92+'%'; el.style.animationDuration=(2+Math.random()*2.5)+'s'; let arr=['1.23x','2.01x','5.44x','10x','1.05x','3.7x','BTC','KSh','100x','WIN','CODE']; el.innerText=arr[Math.floor(Math.random()*arr.length)]; c.appendChild(el); setTimeout(()=>el.remove(),4000);},130);}
 function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
 
-function startBetting(){
-  if(!currentUser) return;
-  phase='betting'; countdown=5; mult=1; bets=[null,null];
-  lambAudio.pause(); // STOP SOUND
-  document.getElementById('mult').innerText='1.00x'; document.getElementById('mult').style.color='#ffcc00'; document.getElementById('mult').style.fontSize='80px';
-  stopCodes(); startCodes();
-  [1,2].forEach(i=>{document.getElementById('btn'+i).innerText='BET '+i; document.getElementById('btn'+i).style.background='#ffcc00'; document.getElementById('btn'+i).style.color='black'; document.getElementById('btn'+i).disabled=false;});
-  let t=setInterval(()=>{
-    countdown-=0.1; document.getElementById('timer').innerText=countdown.toFixed(1)+'s'; document.getElementById('timer').style.display='block';
-    if(countdown<=0){clearInterval(t); document.getElementById('timer').style.display='none'; startCodesUp();}
-  },100);
-}
+function startBetting(){if(!currentUser) return;phase='betting'; countdown=5; mult=1; bets=[null,null];lambAudio.pause();document.getElementById('mult').innerText='1.00x'; document.getElementById('mult').style.color='#ffcc00'; document.getElementById('mult').style.fontSize='80px';stopCodes(); startCodes();[1,2].forEach(i=>{document.getElementById('btn'+i).innerText='BET '+i; document.getElementById('btn'+i).style.background='#ffcc00'; document.getElementById('btn'+i).style.color='black'; document.getElementById('btn'+i).disabled=false;});let t=setInterval(()=>{countdown-=0.1; document.getElementById('timer').innerText=countdown.toFixed(1)+'s'; document.getElementById('timer').style.display='block';if(countdown<=0){clearInterval(t); document.getElementById('timer').style.display='none'; startCodesUp();}},100);}
 
-function startCodesUp(){
-  phase='flying'; document.getElementById('status').innerText='🚀 Running - Cashout!';
-  lambAudio.src = 'https://www.soundjay.com/mechanical/sounds/car-engine-rev-01.mp3'; // LAMBORGHINI SOUND
-  lambAudio.play();
-  
-  let crashPoint=active=='demo'?Math.random()*8+2:Math.random()<0.65?Math.random()*1.3+1:Math.random()*12+2;
-  let speed=0.02;
-  let fly=setInterval(()=>{
-    mult+=speed; speed+=0.0015+mult*0.0006;
-    document.getElementById('mult').innerText=mult.toFixed(2)+'x'; 
-    document.getElementById('mult').style.fontSize=(65+mult*1.5)+'px';
-    
-    // SAUTI INAONGEZEKA KADRI × INAPANDA
-    lambAudio.playbackRate = 1 + (mult/10); // 1x = 1.1x speed, 10x = 2x speed
-    
-    bets.forEach((b,idx)=>{if(b){document.getElementById('btn'+(idx+1)).innerText='CASHOUT '+(b.amount*mult).toFixed(0); document.getElementById('btn'+(idx+1)).style.background='#00ff88';}});
-    if(mult>=crashPoint){
-      clearInterval(fly); stopCodes(); lambAudio.pause();
-      document.getElementById('mult').innerText='CRASHED '+mult.toFixed(2)+'x'; document.getElementById('mult').style.color='#ff1744'; document.getElementById('mult').style.fontSize='38px';
-      hist.push(mult); updateHist();
-      bets.forEach((b,idx)=>{if(b){if(active=='real') myProfit+=b.amount; document.getElementById('btn'+(idx+1)).innerText='LOST'; document.getElementById('btn'+(idx+1)).style.background='#ff1744';}});
-      document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();
-      setTimeout(startBetting,3000);
-    }
-  },80);
-}
+function startCodesUp(){phase='flying'; document.getElementById('status').innerText='🚀 Running - Cashout!';lambAudio.src = 'https://www.soundjay.com/mechanical/sounds/car-engine-rev-01.mp3';lambAudio.play();let crashPoint=active=='demo'?Math.random()*8+2:Math.random()<0.65?Math.random()*1.3+1:Math.random()*12+2;let speed=0.02;let fly=setInterval(()=>{mult+=speed; speed+=0.0015+mult*0.0006;document.getElementById('mult').innerText=mult.toFixed(2)+'x'; document.getElementById('mult').style.fontSize=(65+mult*1.5)+'px';lambAudio.playbackRate = 1 + (mult/10);bets.forEach((b,idx)=>{if(b){document.getElementById('btn'+(idx+1)).innerText='CASHOUT '+(b.amount*mult).toFixed(0); document.getElementById('btn'+(idx+1)).style.background='#00ff88';}});if(mult>=crashPoint){clearInterval(fly); stopCodes(); lambAudio.pause();document.getElementById('mult').innerText='CRASHED '+mult.toFixed(2)+'x'; document.getElementById('mult').style.color='#ff1744'; document.getElementById('mult').style.fontSize='38px';hist.push(mult); updateHist();bets.forEach((b,idx)=>{if(b){if(active=='real') myProfit+=b.amount; document.getElementById('btn'+(idx+1)).innerText='LOST'; document.getElementById('btn'+(idx+1)).style.background='#ff1744';}});document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();setTimeout(startBetting,3000);}},80);}
 function bet(slot){let i=slot-1;if(phase=='betting'){if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);if(acc[active]<amt){alert('Low balance'); showTab('account'); return;}acc[active]-=amt; bets[i]={amount:amt}; updateBal();document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';}else if(phase=='flying' && bets[i]){let win=bets[i].amount*mult; acc[active]+=win;document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled=true; bets[i]=null; updateBal();}}
 function deposit(){let phone = prompt('DEPOSIT\nStep 1: Enter M-PESA Phone Number to pay from:\ne.g 0790806650');if(!phone) return;if(phone.length < 10){ alert('Enter valid phone 07XXXXXXXX'); return; }let amount = prompt('Step 2: Enter amount to deposit KSh:\n\nPay to Till: 123456\nAccount: '+phone);if(!amount) return;amount = parseInt(amount);if(amount < 50){ alert('Minimum deposit is KSh 50'); return; }acc.real += amount; myProfit += amount; updateBal(); alert('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+phone+'\nTo Till: 123456\nPlease complete M-PESA payment.');let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');deps.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});localStorage.setItem('depositReqs', JSON.stringify(deps));}
 function withdraw(){if(acc.real < 100){ alert('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }let amount = prompt('WITHDRAW\nYour balance: KSh '+acc.real+'\n\nEnter amount to withdraw (Min 100):');if(!amount) return;amount = parseInt(amount);if(amount < 100){ alert('Minimum is 100'); return; }if(amount > acc.real){ alert('You only have KSh '+acc.real); return; }let phone = prompt('Enter M-PESA number to receive KSh '+amount+':', currentUser);if(!phone) return;acc.real -= amount;updateBal();alert('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+phone+'\n\nYou will receive M-PESA in 5 minutes.');let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');reqs.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});localStorage.setItem('withdrawReqs', JSON.stringify(reqs));}

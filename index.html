@@ -27,20 +27,27 @@
 /* CLEAN LOGIN */
 #authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center, #0a0a1a 0%, #000 100%);z-index:100;display:flex;align-items:center;justify-content:center}
 .authBox{background:linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);border:2px solid #ffcc00;border-radius:24px;padding:35px 25px;width:92%;max-width:380px;text-align:center;box-shadow:0 0 50px rgba(255,204,0,0.4)}
-
 .authBox h2{color:#ffcc00;margin:0 0 5px;font-size:28px;letter-spacing:2px;text-shadow:0 0 15px #ffcc00}
 .authBox small{color:#aaa;font-size:12px}
-
 .tabs{display:flex;justify-content:center;gap:30px;margin:25px 0 15px;border-bottom:1px solid #333}
 .tabBtn{padding:12px 0;border:0;background:0;color:#666;font-weight:900;font-size:14px;position:relative}
 .tabBtn.active{color:#ffcc00}
 .tabBtn.active::after{content:'';position:absolute;bottom:-1px;left:0;width:100%;height:3px;background:#ffcc00}
-
 .authBox input{width:100%;padding:16px;margin:10px 0;background:#0a0a0f;border:2px solid #333;border-radius:14px;color:white;font-size:15px}
 .authBox input:focus{border-color:#ffcc00;outline:0;box-shadow:0 0 15px rgba(255,204,0,0.4)}
-
 .authBtn{width:100%;padding:16px;margin:15px 0;border:0;border-radius:14px;font-weight:900;font-size:16px;background:linear-gradient(90deg, #ffcc00 0%, #ffaa00 100%);color:black;box-shadow:0 5px 20px rgba(255,204,0,0.4)}
 .bonus-tag{color:#00ff88;font-size:12px;font-weight:700;margin-top:8px}
+
+/* CUSTOM POPUP */
+.customPopup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:300;display:none;align-items:center;justify-content:center}
+.popupBox{background:#1a1a2e;border:2px solid #ffcc00;border-radius:20px;padding:25px;width:90%;max-width:350px;text-align:center}
+.popupBox h3{color:#ffcc00;margin:0 0 15px;font-size:18px}
+.popupBox input{width:100%;padding:15px;margin:10px 0;background:#0a0a0f;border:2px solid #333;border-radius:12px;color:white;font-size:16px;text-align:center}
+.popupBox input:focus{border-color:#ffcc00;outline:0}
+.popupBtns{display:flex;gap:10px;margin-top:15px}
+.popupBtn{flex:1;padding:14px;border:0;border-radius:12px;font-weight:900;font-size:15px}
+.btnCancel{background:#333;color:#aaa}
+.btnOk{background:#ffcc00;color:black}
 
 /* MENU STYLES */
 #moreMenu{position:fixed;top:50px;left:10px;width:90%;max-width:350px;background:#151525;border:1px solid #333;border-radius:16px;padding:10px;z-index:200;display:none}
@@ -56,6 +63,19 @@
 <audio id="lambSound" loop preload="auto"></audio>
 
 <div id="overlay" class="overlay" onclick="closeMenu()"></div>
+
+<!-- CUSTOM POPUP -->
+<div id="customPopup" class="customPopup">
+  <div class="popupBox">
+    <h3 id="popupTitle">DEPOSIT</h3>
+    <p id="popupText" style="color:#aaa;font-size:14px;margin:10px 0">Enter no</p>
+    <input id="popupInput" type="text" placeholder="07XXXXXXXX">
+    <div class="popupBtns">
+      <button class="popupBtn btnCancel" onclick="closePopup()">CANCEL</button>
+      <button class="popupBtn btnOk" onclick="submitPopup()">OK</button>
+    </div>
+  </div>
+</div>
 
 <div id="moreMenu">
   <div style="text-align:center;padding:10px;border-bottom:1px solid #333;margin-bottom:8px">
@@ -74,18 +94,15 @@
   <div class="authBox">
     <h2>AVOX CODES</h2>
     <small>Codes Crash Game</small>
-
     <div class="tabs">
       <button id="tabSignIn" class="tabBtn active" onclick="switchAuth('in')">SIGN IN</button>
       <button id="tabSignUp" class="tabBtn" onclick="switchAuth('up')">SIGN UP</button>
     </div>
-
     <div id="formSignIn">
       <input id="loginPhone" placeholder="Phone Number e.g 07...">
       <input id="loginPass" type="password" placeholder="Password">
       <button class="authBtn" onclick="doLogin()">SIGN IN</button>
     </div>
-
     <div id="formSignUp" style="display:none">
       <input id="regName" placeholder="Full Name">
       <input id="regPhone" placeholder="Phone 07...">
@@ -93,7 +110,6 @@
       <button class="authBtn" onclick="doRegister()">CREATE ACCOUNT</button>
       <div class="bonus-tag">🎁 Bonus: KSh 100 Free</div>
     </div>
-
     <div id="authMsg" style="color:#ff1744;font-size:12px;margin-top:8px"></div>
   </div>
 </div>
@@ -141,10 +157,26 @@
 let currentUser=null, acc={real:0,demo:10000}, active='real', myProfit=0, mult=1, bets=[null,null], phase='betting', countdown=5, hist=[2.3,1.1,4.5,12.2,1.02], codeInt;
 let users=JSON.parse(localStorage.getItem('voxUsers')||'{}');
 let lambAudio = document.getElementById('lambSound');
+let popupCallback = null;
 
 function openMenu(){document.getElementById('moreMenu').style.display='block';document.getElementById('overlay').style.display='block';if(currentUser){document.getElementById('menuName').innerText=users[currentUser].name;document.getElementById('menuEmail').innerText=currentUser;}}
 function closeMenu(){document.getElementById('moreMenu').style.display='none';document.getElementById('overlay').style.display='none';}
 function menuAlert(title,desc){alert(title+'\n\n'+desc+'\n\nThis feature will be added soon.');closeMenu();}
+
+// CUSTOM POPUP FUNCTIONS
+function showPopup(title, text, callback){
+  document.getElementById('popupTitle').innerText = title;
+  document.getElementById('popupText').innerText = text; // "Enter no" pekee
+  document.getElementById('popupInput').value = '';
+  document.getElementById('customPopup').style.display = 'flex';
+  popupCallback = callback;
+}
+function closePopup(){document.getElementById('customPopup').style.display = 'none';}
+function submitPopup(){
+  let val = document.getElementById('popupInput').value;
+  closePopup();
+  if(popupCallback) popupCallback(val);
+}
 
 function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
 function doRegister(){let name=document.getElementById('regName').value, phone=document.getElementById('regPhone').value, pass=document.getElementById('regPass').value;if(!name||!phone||pass.length<4){document.getElementById('authMsg').innerText='Fill all fields, password min 4'; return;}if(users[phone]){document.getElementById('authMsg').innerText='Number already registered, Sign In'; return;}users[phone]={name:name, pass:pass, real:100, demo:10000}; localStorage.setItem('voxUsers', JSON.stringify(users));currentUser=phone; acc.real=100; acc.demo=10000; localStorage.setItem('voxSession', phone); afterLogin();}
@@ -152,11 +184,9 @@ function doLogin(){
   let phone=document.getElementById('loginPhone').value, pass=document.getElementById('loginPass').value;
   if(!users[phone]||users[phone].pass!=pass){document.getElementById('authMsg').innerText='Wrong phone or password'; return;}
   currentUser=phone; acc.real=users[phone].real; acc.demo=users[phone].demo; localStorage.setItem('voxSession', phone);
-
   lambAudio.src = 'https://www.soundjay.com/mechanical/sounds/car-engine-rev-01.mp3';
   lambAudio.volume = 0.3;
   lambAudio.play().catch(e=>console.log('Audio blocked:',e));
-
   afterLogin();
 }
 function afterLogin(){document.getElementById('authOverlay').style.display='none';document.getElementById('accName').innerText=users[currentUser].name;document.getElementById('accPhone').innerText=currentUser;updateBal(); startBetting();}
@@ -181,18 +211,17 @@ function startCodesUp(){
   lambAudio.volume = 0.4;
   lambAudio.play().catch(e=>console.log('Audio blocked:',e));
 
-  // SPEED IKO POLEPOLE ZAIDI SASA
+  // SPEED X2 - NIMEPUNGUZA KUTOKA 0.025 HADI 0.05
   let crashPoint=active=='demo'?Math.random()*12+2:Math.random()<0.6?Math.random()*1.8+1:Math.random()*20+2;
   let startTime = Date.now();
 
   let fly=setInterval(()=>{
     let elapsed = (Date.now() - startTime) / 1000;
-    // NIMEPUNGUZA KUTOKA 0.04 HADI 0.025
-    mult = Math.pow(Math.E, 0.025 * elapsed);
+    mult = Math.pow(Math.E, 0.05 * elapsed); // MARA MBILI FASTER
 
     document.getElementById('mult').innerText=mult.toFixed(2)+'x';
-    document.getElementById('mult').style.fontSize=(60 + mult*1.5)+'px';
-    lambAudio.playbackRate = 1 + (mult/10); // SAUTI INAONGEZEKA POLEPOLE
+    document.getElementById('mult').style.fontSize=(60 + mult*2)+'px';
+    lambAudio.playbackRate = 1 + (mult/8);
 
     bets.forEach((b,idx)=>{if(b){document.getElementById('btn'+(idx+1)).innerText='CASHOUT '+(b.amount*mult).toFixed(0); document.getElementById('btn'+(idx+1)).style.background='#00ff88';}});
 
@@ -204,11 +233,46 @@ function startCodesUp(){
       document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();
       setTimeout(startBetting,3000);
     }
-  },60); // 60ms badala ya 50ms
+  },50); // 50ms
 }
 function bet(slot){let i=slot-1;if(phase=='betting'){if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);if(acc[active]<amt){alert('Low balance'); showTab('account'); return;}acc[active]-=amt; bets[i]={amount:amt}; updateBal();document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';}else if(phase=='flying' && bets[i]){let win=bets[i].amount*mult; acc[active]+=win;document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled=true; bets[i]=null; updateBal();}}
-function deposit(){let phone = prompt('DEPOSIT\nStep 1: Enter M-PESA Phone Number to pay from:\ne.g 0790806650');if(!phone) return;if(phone.length < 10){ alert('Enter valid phone 07XXXXXXXX'); return; }let amount = prompt('Step 2: Enter amount to deposit KSh:\n\nPay to Till: 123456\nAccount: '+phone);if(!amount) return;amount = parseInt(amount);if(amount < 50){ alert('Minimum deposit is KSh 50'); return; }acc.real += amount; myProfit += amount; updateBal(); alert('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+phone+'\nTo Till: 123456\nPlease complete M-PESA payment.');let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');deps.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});localStorage.setItem('depositReqs', JSON.stringify(deps));}
-function withdraw(){if(acc.real < 100){ alert('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }let amount = prompt('WITHDRAW\nYour balance: KSh '+acc.real+'\n\nEnter amount to withdraw (Min 100):');if(!amount) return;amount = parseInt(amount);if(amount < 100){ alert('Minimum is 100'); return; }if(amount > acc.real){ alert('You only have KSh '+acc.real); return; }let phone = prompt('Enter M-PESA number to receive KSh '+amount+':', currentUser);if(!phone) return;acc.real -= amount;updateBal();alert('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+phone+'\n\nYou will receive M-PESA in 5 minutes.');let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');reqs.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});localStorage.setItem('withdrawReqs', JSON.stringify(reqs));}
+
+// DEPOSIT NA CUSTOM POPUP
+function deposit(){
+  showPopup('DEPOSIT', 'Enter no', function(phone){
+    if(!phone) return;
+    if(phone.length < 10){ alert('Enter valid phone 07XXXXXXXX'); return; }
+    showPopup('AMOUNT', 'Enter amount', function(amount){
+      if(!amount) return;
+      amount = parseInt(amount);
+      if(amount < 50){ alert('Minimum deposit is KSh 50'); return; }
+      acc.real += amount; myProfit += amount; updateBal();
+      alert('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+phone+'\nTo Till: 123456');
+      let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');
+      deps.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});
+      localStorage.setItem('depositReqs', JSON.stringify(deps));
+    });
+  });
+}
+
+function withdraw(){
+  if(acc.real < 100){ alert('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }
+  showPopup('WITHDRAW', 'Enter amount', function(amount){
+    if(!amount) return;
+    amount = parseInt(amount);
+    if(amount < 100){ alert('Minimum is 100'); return; }
+    if(amount > acc.real){ alert('You only have KSh '+acc.real); return; }
+    showPopup('M-PESA NO', 'Enter no', function(phone){
+      if(!phone) return;
+      acc.real -= amount; updateBal();
+      alert('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+phone);
+      let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');
+      reqs.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});
+      localStorage.setItem('withdrawReqs', JSON.stringify(reqs));
+    });
+  });
+}
+
 updateBal(); updateHist(); if(currentUser) startBetting();setAcc(active);
 </script>
 </body>

@@ -7,14 +7,13 @@
 *{box-sizing:border-box}body{margin:0;background:#050508;color:white;font-family:Arial;padding-bottom:65px}
 .header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;position:relative;height:55px}
 .menu-btn{background:0;border:0;color:#ffcc00;font-size:22px;font-weight:900;padding:5px 10px;cursor:pointer}
-.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:45px;letter-spacing:2px}
-.phase-btn{background:#222;color:#888;padding:8px 18px;border:0;border-radius:20px;font-weight:900;font-size:12px;transition:0.2s}
-.phase-btn.active{background:#ff1744;color:white;box-shadow:0 0 10px #ff1744}
+.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:40px;letter-spacing:2px;white-space:nowrap} /* ONE LINE */
+.phase-badge{background:#00c853;color:white;padding:8px 18px;border-radius:20px;font-weight:900;font-size:13px;box-shadow:0 0 10px #00c853} /* GREEN BADGE */
 #game{height:45vh;background:#050508;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-#gameTitle{position:absolute;top:8%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;color:#ffcc00;text-shadow:0 0 20px #ffcc00;z-index:5;letter-spacing:3px} /* GREEN AREA TEXT */
+#gameTitle{position:absolute;top:8%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;color:#ffcc00;text-shadow:0 0 20px #ffcc00;z-index:5;letter-spacing:3px}
 #mult{font-size:80px;font-weight:900;color:#ffcc00;z-index:10;text-shadow:0 0 30px #ffcc00;font-family:monospace}
 #codes{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.4}
-.code{position:absolute;color:#ff1744;font-size:14px;font-weight:900;animation:riseUp linear forwards;font-family:monospace;text-shadow:0 0 5px #ff1744} /* RED RISING CODES */
+.code{position:absolute;color:#ff1744;font-size:14px;font-weight:900;animation:riseUp linear forwards;font-family:monospace;text-shadow:0 0 5px #ff1744}
 @keyframes riseUp{0%{transform:translateY(50vh);opacity:0}10%{opacity:1}100%{transform:translateY(-80px);opacity:0}}
 #timer{position:absolute;top:15px;left:50%;transform:translateX(-50%);background:#ffcc00;color:black;padding:8px 22px;border-radius:20px;font-weight:900;font-size:18px;z-index:20}
 .bet-panel{display:flex;gap:8px;padding:8px;background:#151525;margin:6px 8px;border-radius:14px;border:1px solid #222}
@@ -82,17 +81,16 @@
 
 <div class="header">
   <button class="menu-btn" onclick="openMenu()">⋮</button>
-  <b class="logo-center">AVOX CODES</b>
-  <div style="display:flex;gap:6px;z-index:10">
-    <button id="rBtn" class="phase-btn active" onclick="setAcc('real')">REAL</button>
-    <button id="dBtn" class="phase-btn" onclick="setAcc('demo')">DEMO</button>
+  <b class="logo-center">AVOX CODES</b> <!-- ONE LINE -->
+  <div style="display:flex;gap:8px;align-items:center;z-index:10">
+    <div id="phaseBadge" class="phase-badge">REAL</div> <!-- ONLY ONE SHOWS -->
+    <b id="bal" style="color:#00c853;font-weight:900;font-size:15px">KSh 0</b> <!-- GREEN BALANCE -->
   </div>
-  <b id="bal" style="color:#ff1744;font-weight:900;font-size:15px;z-index:10">KSh 0</b>
 </div>
 
 <div id="tab-market" class="tab active">
   <div id="game">
-    <div id="gameTitle">AVOX CODES</div> <!-- GREEN AREA -->
+    <div id="gameTitle">AVOX CODES</div>
     <div id="codes"></div>
     <div id="timer">5.0s</div>
     <div id="mult">1.00x</div>
@@ -106,14 +104,14 @@
 <div id="tab-account" class="tab">
   <div style="background:#151525;margin:10px;border-radius:16px;padding:20px;text-align:center;border:1px solid #222">
     <small style="color:#888" id="accName">Player</small>
-    <h1 id="bigBal" style="color:#ff1744;margin:10px 0">KSh 0</h1>
+    <h1 id="bigBal" style="color:#00c853;margin:10px 0">KSh 0</h1> <!-- GREEN -->
     <small id="accPhone" style="color:#666"></small>
     <div id="accButtons" style="display:flex;gap:8px;margin-top:15px">
       <button class="bet-btn" style="background:#ffcc00;color:black" onclick="deposit()">DEPOSIT</button>
       <button id="withdrawBtn" class="bet-btn" style="background:#00c853;color:white" onclick="withdraw()">WITHDRAW</button>
     </div>
   </div>
-  <div style="background:#2a1a00;margin:10px;border-radius:12px;padding:12px;border:1px solid #ff1744"><small>My Profit (Your Admin Profit)</small><br><b id="adminP" style="color:#ff1744;font-size:20px">KSh 0</b></div>
+  <div style="background:#002200;margin:10px;border-radius:12px;padding:12px;border:1px solid #00c853"><small>My Profit (Your Admin Profit)</small><br><b id="adminP" style="color:#00c853;font-size:20px">KSh 0</b></div>
   <div style="text-align:center;margin-top:20px">
     <button onclick="logout()" style="background:0;border:0;color:#666;font-size:12px">LOGOUT</button>
   </div>
@@ -155,12 +153,25 @@ function logout(){localStorage.removeItem('voxSession'); location.reload();}
 function saveUser(){if(currentUser){users[currentUser].real=acc.real; users[currentUser].demo=acc.demo; localStorage.setItem('voxUsers', JSON.stringify(users));}}
 let sess=localStorage.getItem('voxSession'); if(sess && users[sess]){currentUser=sess; acc.real=users[sess].real; acc.demo=users[sess].demo; document.getElementById('authOverlay').style.display='none'; document.getElementById('accName').innerText=users[currentUser].name; document.getElementById('accPhone').innerText=currentUser;}
 
+// TAP HEADER TO SWITCH REAL/DEMO
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.querySelector('.header').addEventListener('click', (e)=>{
+    if(e.target.closest('.menu-btn')) return;
+    setAcc(active=='real'?'demo':'real');
+  });
+});
+
 function setAcc(t){
   active=t; 
-  document.getElementById('rBtn').className=t=='real'?'phase-btn active':'phase-btn'; 
-  document.getElementById('dBtn').className=t=='demo'?'phase-btn active':'phase-btn'; 
-  document.getElementById('bal').style.color = '#ff1744';
-  document.getElementById('bigBal').style.color = '#ff1744';
+  // SHOW ONLY ONE
+  document.getElementById('phaseBadge').innerText = t.toUpperCase();
+  
+  // GREEN COLOR FOR BOTH
+  document.getElementById('phaseBadge').style.background = '#00c853';
+  document.getElementById('phaseBadge').style.boxShadow = '0 0 10px #00c853';
+  document.getElementById('bal').style.color = '#00c853';
+  document.getElementById('bigBal').style.color = '#00c853';
+  
   if(t=='demo'){
     document.getElementById('withdrawBtn').style.display='none';
     document.getElementById('accButtons').style.justifyContent='center';
@@ -173,7 +184,7 @@ function setAcc(t){
 
 function updateBal(){document.getElementById('bal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('bigBal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('adminP').innerText='KSh '+Math.floor(myProfit); saveUser();}
 function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+n).classList.add('active'); document.getElementById('b-'+n).classList.add('active');}
-function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#664d00':'#ff1744'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
+function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#004d00':'#00c853'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
 
 function startCodes(){
   const c=document.getElementById('codes'); 
@@ -186,7 +197,7 @@ function startCodes(){
     el.innerText=arr[Math.floor(Math.random()*arr.length)]; 
     c.appendChild(el); 
     setTimeout(()=>el.remove(),4500);
-  },120); // FASTER RED CODES RISING
+  },120);
 }
 function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
 

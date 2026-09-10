@@ -27,9 +27,52 @@
 .authBox input{width:100%;padding:14px;margin:8px 0;background:#050508;border:1px solid #333;border-radius:12px;color:white;font-size:15px}
 .authBtn{width:100%;padding:14px;margin:6px 0;border:0;border-radius:12px;font-weight:900;font-size:15px}
 .tabBtn{padding:10px 20px;border:0;background:0;color:#888;font-weight:900}.tabBtn.active{color:#ffcc00;border-bottom:2px solid #ffcc00}
+
+/* NEW MENU STYLES */
+#moreMenu{position:fixed;top:50px;left:10px;width:90%;max-width:350px;background:#151525;border:1px solid #333;border-radius:16px;padding:10px;z-index:200;display:none;box-shadow:0 0 20px rgba(0,0,0,0.8)}
+.menu-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:#0f0f1a;margin:6px 0;cursor:pointer}
+.menu-item:active{background:#222}
+.menu-icon{font-size:20px;width:25px}
+.menu-text b{display:block;font-size:14px}
+.menu-text small{color:#888;font-size:11px}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:199;display:none}
 </style>
 </head>
 <body>
+
+<div id="overlay" class="overlay" onclick="closeMenu()"></div>
+
+<div id="moreMenu">
+  <div style="text-align:center;padding:10px;border-bottom:1px solid #333;margin-bottom:8px">
+    <h3 id="menuName" style="margin:0;color:#ffcc00">Amos Kimungetich</h3>
+    <small id="menuEmail" style="color:#888">toxcykim20@gmail.com</small><br>
+    <span style="background:#003366;color:#00aaff;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700">Verified</span>
+  </div>
+  
+  <div class="menu-item" onclick="menuAlert('Profile & Security','Personal data and access control')">
+    <div class="menu-icon">👤</div>
+    <div class="menu-text"><b>Profile & Security</b><small>Personal data and access control</small></div>
+    <div style="margin-left:auto">›</div>
+  </div>
+  
+  <div class="menu-item" onclick="menuAlert('App Settings','Interface customization options')">
+    <div class="menu-icon">⚙️</div>
+    <div class="menu-text"><b>App Settings</b><small>Interface customization options</small></div>
+    <div style="margin-left:auto">›</div>
+  </div>
+  
+  <div class="menu-item" onclick="menuAlert('Live Chat','24/7 multilingual support')">
+    <div class="menu-icon">🎧</div>
+    <div class="menu-text"><b>Live Chat</b><small>24/7 multilingual support</small></div>
+    <div style="margin-left:auto">›</div>
+  </div>
+  
+  <div class="menu-item" onclick="menuAlert('Legal Documents','Terms, Privacy Policy, Risk Disclosure')">
+    <div class="menu-icon">📄</div>
+    <div class="menu-text"><b>Legal Documents</b><small>Terms, Privacy Policy, Risk Disclosure</small></div>
+    <div style="margin-left:auto">›</div>
+  </div>
+</div>
 
 <div id="authOverlay">
   <div class="authBox">
@@ -56,7 +99,7 @@
 </div>
 
 <div class="header">
-  <button class="menu-btn" onclick="alert('More options coming soon!')">⋮</button>
+  <button class="menu-btn" onclick="openMenu()">⋮</button>
   <b class="logo-center">AVOX CODES</b>
   <div style="display:flex;gap:4px;z-index:10"><button id="rBtn" class="real-on" onclick="setAcc('real')">REAL</button><button id="dBtn" class="off" onclick="setAcc('demo')">DEMO</button></div>
   <b id="bal" style="color:#ffcc00;z-index:10">KSh 0</b>
@@ -66,10 +109,7 @@
   <div id="game"><div id="codes"></div><div id="timer">5.0s</div><div id="mult">1.00x</div></div>
   <div style="text-align:center;padding:7px;font-size:12px;background:#0f0f1a;color:#aaa" id="status">⏳ Place bets - 5 sec</div>
   
-  <!-- BET 1 -->
   <div class="bet-panel"><input id="stake1" value="20" type="number"><button id="btn1" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(1)">BET 1</button></div>
-  
-  <!-- BET 2 -->
   <div class="bet-panel"><input id="stake2" value="20" type="number"><button id="btn2" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(2)">BET 2</button></div>
   
   <div style="padding:8px;display:flex;gap:5px;overflow-x:auto" id="history"></div>
@@ -99,6 +139,24 @@
 <script>
 let currentUser=null, acc={real:0,demo:10000}, active='real', myProfit=0, mult=1, bets=[null,null], phase='betting', countdown=5, hist=[2.3,1.1,4.5,12.2,1.02], codeInt;
 let users=JSON.parse(localStorage.getItem('voxUsers')||'{}');
+
+function openMenu(){
+  document.getElementById('moreMenu').style.display='block';
+  document.getElementById('overlay').style.display='block';
+  if(currentUser){
+    document.getElementById('menuName').innerText=users[currentUser].name;
+    document.getElementById('menuEmail').innerText=currentUser;
+  }
+}
+function closeMenu(){
+  document.getElementById('moreMenu').style.display='none';
+  document.getElementById('overlay').style.display='none';
+}
+function menuAlert(title,desc){
+  alert(title+'\n\n'+desc+'\n\nThis feature will be added soon.');
+  closeMenu();
+}
+
 function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
 function doRegister(){
   let name=document.getElementById('regName').value, phone=document.getElementById('regPhone').value, pass=document.getElementById('regPass').value;

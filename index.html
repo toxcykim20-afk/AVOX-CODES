@@ -5,10 +5,11 @@
 <title>AVOX CODES - Crash</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#050508;color:white;font-family:Arial;padding-bottom:65px}
-.header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;position:relative}
+.header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;position:relative;height:55px}
 .menu-btn{background:0;border:0;color:#ffcc00;font-size:22px;font-weight:900;padding:5px 10px;cursor:pointer}
-.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:15px}
-.real-on{background:#ffcc00;color:black;padding:6px 14px;border:0;border-radius:15px;font-weight:900;font-size:11px}.off{background:#222;color:#888;padding:6px 14px;border:0;border-radius:15px;font-size:11px}
+.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:45px;letter-spacing:2px} /* 3X BIGGER */
+.phase-btn{background:#222;color:#888;padding:8px 18px;border:0;border-radius:20px;font-weight:900;font-size:12px;transition:0.2s}
+.phase-btn.active{background:#ff1744;color:white;box-shadow:0 0 10px #ff1744} /* RED WHEN ACTIVE */
 #game{height:45vh;background:#050508;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
 #mult{font-size:80px;font-weight:900;color:#ffcc00;z-index:10;text-shadow:0 0 30px #ffcc00;font-family:monospace}
 #codes{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.35}
@@ -28,8 +29,8 @@
 .authBtn{width:100%;padding:14px;margin:6px 0;border:0;border-radius:12px;font-weight:900;font-size:15px}
 .tabBtn{padding:10px 20px;border:0;background:0;color:#888;font-weight:900}.tabBtn.active{color:#ffcc00;border-bottom:2px solid #ffcc00}
 
-/* NEW MENU STYLES */
-#moreMenu{position:fixed;top:50px;left:10px;width:90%;max-width:350px;background:#151525;border:1px solid #333;border-radius:16px;padding:10px;z-index:200;display:none;box-shadow:0 0 20px rgba(0,0,0,0.8)}
+/* MENU STYLES */
+#moreMenu{position:fixed;top:60px;left:10px;width:90%;max-width:350px;background:#151525;border:1px solid #333;border-radius:16px;padding:10px;z-index:200;display:none;box-shadow:0 0 20px rgba(0,0,0,0.8)}
 .menu-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:#0f0f1a;margin:6px 0;cursor:pointer}
 .menu-item:active{background:#222}
 .menu-icon{font-size:20px;width:25px}
@@ -48,30 +49,10 @@
     <small id="menuEmail" style="color:#888">toxcykim20@gmail.com</small><br>
     <span style="background:#003366;color:#00aaff;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700">Verified</span>
   </div>
-  
-  <div class="menu-item" onclick="menuAlert('Profile & Security','Personal data and access control')">
-    <div class="menu-icon">👤</div>
-    <div class="menu-text"><b>Profile & Security</b><small>Personal data and access control</small></div>
-    <div style="margin-left:auto">›</div>
-  </div>
-  
-  <div class="menu-item" onclick="menuAlert('App Settings','Interface customization options')">
-    <div class="menu-icon">⚙️</div>
-    <div class="menu-text"><b>App Settings</b><small>Interface customization options</small></div>
-    <div style="margin-left:auto">›</div>
-  </div>
-  
-  <div class="menu-item" onclick="menuAlert('Live Chat','24/7 multilingual support')">
-    <div class="menu-icon">🎧</div>
-    <div class="menu-text"><b>Live Chat</b><small>24/7 multilingual support</small></div>
-    <div style="margin-left:auto">›</div>
-  </div>
-  
-  <div class="menu-item" onclick="menuAlert('Legal Documents','Terms, Privacy Policy, Risk Disclosure')">
-    <div class="menu-icon">📄</div>
-    <div class="menu-text"><b>Legal Documents</b><small>Terms, Privacy Policy, Risk Disclosure</small></div>
-    <div style="margin-left:auto">›</div>
-  </div>
+  <div class="menu-item" onclick="menuAlert('Profile & Security','Personal data and access control')"><div class="menu-icon">👤</div><div class="menu-text"><b>Profile & Security</b><small>Personal data and access control</small></div><div style="margin-left:auto">›</div></div>
+  <div class="menu-item" onclick="menuAlert('App Settings','Interface customization options')"><div class="menu-icon">⚙️</div><div class="menu-text"><b>App Settings</b><small>Interface customization options</small></div><div style="margin-left:auto">›</div></div>
+  <div class="menu-item" onclick="menuAlert('Live Chat','24/7 multilingual support')"><div class="menu-icon">🎧</div><div class="menu-text"><b>Live Chat</b><small>24/7 multilingual support</small></div><div style="margin-left:auto">›</div></div>
+  <div class="menu-item" onclick="menuAlert('Legal Documents','Terms, Privacy Policy, Risk Disclosure')"><div class="menu-icon">📄</div><div class="menu-text"><b>Legal Documents</b><small>Terms, Privacy Policy, Risk Disclosure</small></div><div style="margin-left:auto">›</div></div>
 </div>
 
 <div id="authOverlay">
@@ -101,31 +82,32 @@
 <div class="header">
   <button class="menu-btn" onclick="openMenu()">⋮</button>
   <b class="logo-center">AVOX CODES</b>
-  <div style="display:flex;gap:4px;z-index:10"><button id="rBtn" class="real-on" onclick="setAcc('real')">REAL</button><button id="dBtn" class="off" onclick="setAcc('demo')">DEMO</button></div>
-  <b id="bal" style="color:#ffcc00;z-index:10">KSh 0</b>
+  <div style="display:flex;gap:6px;z-index:10">
+    <button id="rBtn" class="phase-btn active" onclick="setAcc('real')">REAL</button>
+    <button id="dBtn" class="phase-btn" onclick="setAcc('demo')">DEMO</button>
+  </div>
+  <b id="bal" style="color:#ff1744;font-weight:900;font-size:15px;z-index:10">KSh 0</b> <!-- RED BALANCE -->
 </div>
 
 <div id="tab-market" class="tab active">
   <div id="game"><div id="codes"></div><div id="timer">5.0s</div><div id="mult">1.00x</div></div>
   <div style="text-align:center;padding:7px;font-size:12px;background:#0f0f1a;color:#aaa" id="status">⏳ Place bets - 5 sec</div>
-  
   <div class="bet-panel"><input id="stake1" value="20" type="number"><button id="btn1" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(1)">BET 1</button></div>
   <div class="bet-panel"><input id="stake2" value="20" type="number"><button id="btn2" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(2)">BET 2</button></div>
-  
   <div style="padding:8px;display:flex;gap:5px;overflow-x:auto" id="history"></div>
 </div>
 
 <div id="tab-account" class="tab">
   <div style="background:#151525;margin:10px;border-radius:16px;padding:20px;text-align:center;border:1px solid #222">
     <small style="color:#888" id="accName">Player</small>
-    <h1 id="bigBal" style="color:#ffcc00;margin:10px 0">KSh 0</h1>
+    <h1 id="bigBal" style="color:#ff1744;margin:10px 0">KSh 0</h1> <!-- RED BALANCE -->
     <small id="accPhone" style="color:#666"></small>
     <div id="accButtons" style="display:flex;gap:8px;margin-top:15px">
       <button class="bet-btn" style="background:#ffcc00;color:black" onclick="deposit()">DEPOSIT</button>
       <button id="withdrawBtn" class="bet-btn" style="background:#00c853;color:white" onclick="withdraw()">WITHDRAW</button>
     </div>
   </div>
-  <div style="background:#2a1a00;margin:10px;border-radius:12px;padding:12px;border:1px solid #ffcc00"><small>My Profit (Your Admin Profit)</small><br><b id="adminP" style="color:#ffcc00;font-size:20px">KSh 0</b></div>
+  <div style="background:#2a1a00;margin:10px;border-radius:12px;padding:12px;border:1px solid #ff1744"><small>My Profit (Your Admin Profit)</small><br><b id="adminP" style="color:#ff1744;font-size:20px">KSh 0</b></div>
   <div style="text-align:center;margin-top:20px">
     <button onclick="logout()" style="background:0;border:0;color:#666;font-size:12px">LOGOUT</button>
   </div>
@@ -140,22 +122,9 @@
 let currentUser=null, acc={real:0,demo:10000}, active='real', myProfit=0, mult=1, bets=[null,null], phase='betting', countdown=5, hist=[2.3,1.1,4.5,12.2,1.02], codeInt;
 let users=JSON.parse(localStorage.getItem('voxUsers')||'{}');
 
-function openMenu(){
-  document.getElementById('moreMenu').style.display='block';
-  document.getElementById('overlay').style.display='block';
-  if(currentUser){
-    document.getElementById('menuName').innerText=users[currentUser].name;
-    document.getElementById('menuEmail').innerText=currentUser;
-  }
-}
-function closeMenu(){
-  document.getElementById('moreMenu').style.display='none';
-  document.getElementById('overlay').style.display='none';
-}
-function menuAlert(title,desc){
-  alert(title+'\n\n'+desc+'\n\nThis feature will be added soon.');
-  closeMenu();
-}
+function openMenu(){document.getElementById('moreMenu').style.display='block';document.getElementById('overlay').style.display='block';if(currentUser){document.getElementById('menuName').innerText=users[currentUser].name;document.getElementById('menuEmail').innerText=currentUser;}}
+function closeMenu(){document.getElementById('moreMenu').style.display='none';document.getElementById('overlay').style.display='none';}
+function menuAlert(title,desc){alert(title+'\n\n'+desc+'\n\nThis feature will be added soon.');closeMenu();}
 
 function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
 function doRegister(){
@@ -179,11 +148,17 @@ function afterLogin(){
 function logout(){localStorage.removeItem('voxSession'); location.reload();}
 function saveUser(){if(currentUser){users[currentUser].real=acc.real; users[currentUser].demo=acc.demo; localStorage.setItem('voxUsers', JSON.stringify(users));}}
 let sess=localStorage.getItem('voxSession'); if(sess && users[sess]){currentUser=sess; acc.real=users[sess].real; acc.demo=users[sess].demo; document.getElementById('authOverlay').style.display='none'; document.getElementById('accName').innerText=users[currentUser].name; document.getElementById('accPhone').innerText=currentUser;}
+
 function setAcc(t){
   active=t; 
-  document.getElementById('rBtn').className=t=='real'?'real-on':'off'; 
-  document.getElementById('dBtn').className=t=='demo'?'real-on':'off'; 
-  if(t=='demo'){document.getElementById('dBtn').style.background='#00c853'; document.getElementById('dBtn').style.color='white';} 
+  // ONLY ONE RED AT A TIME
+  document.getElementById('rBtn').className=t=='real'?'phase-btn active':'phase-btn'; 
+  document.getElementById('dBtn').className=t=='demo'?'phase-btn active':'phase-btn'; 
+  
+  // BALANCE COLOR ALSO CHANGES WITH PHASE
+  document.getElementById('bal').style.color = '#ff1744';
+  document.getElementById('bigBal').style.color = '#ff1744';
+  
   if(t=='demo'){
     document.getElementById('withdrawBtn').style.display='none';
     document.getElementById('accButtons').style.justifyContent='center';
@@ -193,9 +168,10 @@ function setAcc(t){
   }
   updateBal();
 }
+
 function updateBal(){document.getElementById('bal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('bigBal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('adminP').innerText='KSh '+Math.floor(myProfit); saveUser();}
 function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+n).classList.add('active'); document.getElementById('b-'+n).classList.add('active');}
-function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#664d00':'#ffcc00'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
+function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#664d00':'#ff1744'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
 function startCodes(){const c=document.getElementById('codes'); codeInt=setInterval(()=>{let el=document.createElement('div'); el.className='code'; el.style.left=Math.random()*92+'%'; el.style.animationDuration=(2+Math.random()*2.5)+'s'; let arr=['1.23x','2.01x','5.44x','10x','1.05x','3.7x','BTC','KSh','100x','WIN','CODE']; el.innerText=arr[Math.floor(Math.random()*arr.length)]; c.appendChild(el); setTimeout(()=>el.remove(),4000);},130);}
 function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
 function startBetting(){

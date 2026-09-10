@@ -7,14 +7,15 @@
 *{box-sizing:border-box}body{margin:0;background:#050508;color:white;font-family:Arial;padding-bottom:65px}
 .header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;position:relative;height:55px}
 .menu-btn{background:0;border:0;color:#ffcc00;font-size:22px;font-weight:900;padding:5px 10px;cursor:pointer}
-.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:45px;letter-spacing:2px} /* 3X BIGGER */
+.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:45px;letter-spacing:2px}
 .phase-btn{background:#222;color:#888;padding:8px 18px;border:0;border-radius:20px;font-weight:900;font-size:12px;transition:0.2s}
-.phase-btn.active{background:#ff1744;color:white;box-shadow:0 0 10px #ff1744} /* RED WHEN ACTIVE */
+.phase-btn.active{background:#ff1744;color:white;box-shadow:0 0 10px #ff1744}
 #game{height:45vh;background:#050508;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#gameTitle{position:absolute;top:8%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;color:#ffcc00;text-shadow:0 0 20px #ffcc00;z-index:5;letter-spacing:3px} /* GREEN AREA TEXT */
 #mult{font-size:80px;font-weight:900;color:#ffcc00;z-index:10;text-shadow:0 0 30px #ffcc00;font-family:monospace}
-#codes{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.35}
-.code{position:absolute;color:#ffcc00;font-size:13px;font-weight:700;animation:moveUp linear forwards;font-family:monospace}
-@keyframes moveUp{0%{transform:translateY(50vh);opacity:0}15%{opacity:1}100%{transform:translateY(-60px);opacity:0}}
+#codes{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.4}
+.code{position:absolute;color:#ff1744;font-size:14px;font-weight:900;animation:riseUp linear forwards;font-family:monospace;text-shadow:0 0 5px #ff1744} /* RED RISING CODES */
+@keyframes riseUp{0%{transform:translateY(50vh);opacity:0}10%{opacity:1}100%{transform:translateY(-80px);opacity:0}}
 #timer{position:absolute;top:15px;left:50%;transform:translateX(-50%);background:#ffcc00;color:black;padding:8px 22px;border-radius:20px;font-weight:900;font-size:18px;z-index:20}
 .bet-panel{display:flex;gap:8px;padding:8px;background:#151525;margin:6px 8px;border-radius:14px;border:1px solid #222}
 .bet-panel input{width:75px;background:#050508;border:1px solid #333;color:#ffcc00;border-radius:10px;padding:12px;text-align:center;font-weight:900}
@@ -86,11 +87,16 @@
     <button id="rBtn" class="phase-btn active" onclick="setAcc('real')">REAL</button>
     <button id="dBtn" class="phase-btn" onclick="setAcc('demo')">DEMO</button>
   </div>
-  <b id="bal" style="color:#ff1744;font-weight:900;font-size:15px;z-index:10">KSh 0</b> <!-- RED BALANCE -->
+  <b id="bal" style="color:#ff1744;font-weight:900;font-size:15px;z-index:10">KSh 0</b>
 </div>
 
 <div id="tab-market" class="tab active">
-  <div id="game"><div id="codes"></div><div id="timer">5.0s</div><div id="mult">1.00x</div></div>
+  <div id="game">
+    <div id="gameTitle">AVOX CODES</div> <!-- GREEN AREA -->
+    <div id="codes"></div>
+    <div id="timer">5.0s</div>
+    <div id="mult">1.00x</div>
+  </div>
   <div style="text-align:center;padding:7px;font-size:12px;background:#0f0f1a;color:#aaa" id="status">⏳ Place bets - 5 sec</div>
   <div class="bet-panel"><input id="stake1" value="20" type="number"><button id="btn1" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(1)">BET 1</button></div>
   <div class="bet-panel"><input id="stake2" value="20" type="number"><button id="btn2" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(2)">BET 2</button></div>
@@ -100,7 +106,7 @@
 <div id="tab-account" class="tab">
   <div style="background:#151525;margin:10px;border-radius:16px;padding:20px;text-align:center;border:1px solid #222">
     <small style="color:#888" id="accName">Player</small>
-    <h1 id="bigBal" style="color:#ff1744;margin:10px 0">KSh 0</h1> <!-- RED BALANCE -->
+    <h1 id="bigBal" style="color:#ff1744;margin:10px 0">KSh 0</h1>
     <small id="accPhone" style="color:#666"></small>
     <div id="accButtons" style="display:flex;gap:8px;margin-top:15px">
       <button class="bet-btn" style="background:#ffcc00;color:black" onclick="deposit()">DEPOSIT</button>
@@ -151,14 +157,10 @@ let sess=localStorage.getItem('voxSession'); if(sess && users[sess]){currentUser
 
 function setAcc(t){
   active=t; 
-  // ONLY ONE RED AT A TIME
   document.getElementById('rBtn').className=t=='real'?'phase-btn active':'phase-btn'; 
   document.getElementById('dBtn').className=t=='demo'?'phase-btn active':'phase-btn'; 
-  
-  // BALANCE COLOR ALSO CHANGES WITH PHASE
   document.getElementById('bal').style.color = '#ff1744';
   document.getElementById('bigBal').style.color = '#ff1744';
-  
   if(t=='demo'){
     document.getElementById('withdrawBtn').style.display='none';
     document.getElementById('accButtons').style.justifyContent='center';
@@ -172,8 +174,22 @@ function setAcc(t){
 function updateBal(){document.getElementById('bal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('bigBal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('adminP').innerText='KSh '+Math.floor(myProfit); saveUser();}
 function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+n).classList.add('active'); document.getElementById('b-'+n).classList.add('active');}
 function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#664d00':'#ff1744'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
-function startCodes(){const c=document.getElementById('codes'); codeInt=setInterval(()=>{let el=document.createElement('div'); el.className='code'; el.style.left=Math.random()*92+'%'; el.style.animationDuration=(2+Math.random()*2.5)+'s'; let arr=['1.23x','2.01x','5.44x','10x','1.05x','3.7x','BTC','KSh','100x','WIN','CODE']; el.innerText=arr[Math.floor(Math.random()*arr.length)]; c.appendChild(el); setTimeout(()=>el.remove(),4000);},130);}
+
+function startCodes(){
+  const c=document.getElementById('codes'); 
+  codeInt=setInterval(()=>{
+    let el=document.createElement('div'); 
+    el.className='code'; 
+    el.style.left=Math.random()*90+'%'; 
+    el.style.animationDuration=(2.5+Math.random()*2)+'s'; 
+    let arr=['AVOX','CODE','1.5x','10x','WIN','BTC','KSh','100x','MOON','🔥','5.2x']; 
+    el.innerText=arr[Math.floor(Math.random()*arr.length)]; 
+    c.appendChild(el); 
+    setTimeout(()=>el.remove(),4500);
+  },120); // FASTER RED CODES RISING
+}
 function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
+
 function startBetting(){
   if(!currentUser) return;
   phase='betting'; countdown=5; mult=1; bets=[null,null];

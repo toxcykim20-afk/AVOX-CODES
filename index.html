@@ -1,187 +1,21 @@
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AVOX CODES - Crash</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#050508;color:white;font-family:Arial;padding-bottom:65px}
-.header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222}
-.real-on{background:#ffcc00;color:black;padding:6px 14px;border:0;border-radius:15px;font-weight:900;font-size:11px}.off{background:#222;color:#888;padding:6px 14px;border:0;border-radius:15px;font-size:11px}
-#game{height:45vh;background:#050508;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-#mult{font-size:80px;font-weight:900;color:#ffcc00;z-index:10;text-shadow:0 0 30px #ffcc00;font-family:monospace}
-#codes{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.35}
-.code{position:absolute;color:#ffcc00;font-size:13px;font-weight:700;animation:moveUp linear forwards;font-family:monospace}
-@keyframes moveUp{0%{transform:translateY(50vh);opacity:0}15%{opacity:1}100%{transform:translateY(-60px);opacity:0}}
-#timer{position:absolute;top:15px;left:50%;transform:translateX(-50%);background:#ffcc00;color:black;padding:8px 22px;border-radius:20px;font-weight:900;font-size:18px;z-index:20}
-.bet-panel{display:flex;gap:8px;padding:8px;background:#151525;margin:6px 8px;border-radius:14px;border:1px solid #222}
-.bet-panel input{width:75px;background:#050508;border:1px solid #333;color:#ffcc00;border-radius:10px;padding:12px;text-align:center;font-weight:900}
-.bet-btn{flex:1;padding:14px;border:0;border-radius:12px;font-weight:900;font-size:15px}
-.tab{display:none}.tab.active{display:block}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#12121f;display:flex;border-top:1px solid #333;height:60px}
-.bottom button{flex:1;background:0;border:0;color:#888;padding:8px;font-size:11px;font-weight:700}
-.bottom button.active{color:#ffcc00;border-top:3px solid #ffcc00}
-#authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:100;display:flex;align-items:center;justify-content:center}
-.authBox{background:#151525;border:2px solid #ffcc00;border-radius:20px;padding:25px;width:90%;max-width:350px;text-align:center}
-.authBox input{width:100%;padding:14px;margin:8px 0;background:#050508;border:1px solid #333;border-radius:12px;color:white;font-size:15px}
-.authBtn{width:100%;padding:14px;margin:6px 0;border:0;border-radius:12px;font-weight:900;font-size:15px}
-.tabBtn{padding:10px 20px;border:0;background:0;color:#888;font-weight:900}.tabBtn.active{color:#ffcc00;border-bottom:2px solid #ffcc00}
-</style>
-</head>
-<body>
-
-<div id="authOverlay">
-  <div class="authBox">
-    <h2 style="color:#ffcc00;margin:0 0 5px">AVOX CODES</h2>
-    <small style="color:#888">Codes Crash Game</small>
-    <div style="display:flex;justify-content:center;gap:20px;margin:15px 0">
-      <button id="tabSignIn" class="tabBtn active" onclick="switchAuth('in')">SIGN IN</button>
-      <button id="tabSignUp" class="tabBtn" onclick="switchAuth('up')">SIGN UP</button>
-    </div>
-    <div id="formSignIn">
-      <input id="loginPhone" placeholder="Phone Number e.g 07...">
-      <input id="loginPass" type="password" placeholder="Password">
-      <button class="authBtn" style="background:#ffcc00;color:black" onclick="doLogin()">SIGN IN</button>
-    </div>
-    <div id="formSignUp" style="display:none">
-      <input id="regName" placeholder="Full Name">
-      <input id="regPhone" placeholder="Phone 07...">
-      <input id="regPass" type="password" placeholder="Create Password (min 4)">
-      <button class="authBtn" style="background:#ffcc00;color:black" onclick="doRegister()">CREATE ACCOUNT</button>
-      <small style="color:#888">Bonus: KSh 100 Free</small>
-    </div>
-    <div id="authMsg" style="color:#ff1744;font-size:12px;margin-top:8px"></div>
-  </div>
-</div>
-
-<div class="header">
-  <b style="color:#ffcc00">AVOX CODES</b>
-  <div style="display:flex;gap:4px"><button id="rBtn" class="real-on" onclick="setAcc('real')">REAL</button><button id="dBtn" class="off" onclick="setAcc('demo')">DEMO</button></div>
-  <b id="bal" style="color:#ffcc00">KSh 0</b>
-</div>
-
-<div id="tab-market" class="tab active">
-  <div id="game"><div id="codes"></div><div id="timer">5.0s</div><div id="mult">1.00x</div></div>
-  <div style="text-align:center;padding:7px;font-size:12px;background:#0f0f1a;color:#aaa" id="status">⏳ Place bets - 5 sec</div>
-  <div class="bet-panel"><input id="stake1" value="100" type="number"><button id="btn1" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(1)">BET 1</button></div>
-  <div class="bet-panel"><input id="stake2" value="200" type="number"><button id="btn2" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(2)">BET 2</button></div>
-  <div class="bet-panel"><input id="stake3" value="500" type="number"><button id="btn3" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(3)">BET 3</button></div>
-  <div style="padding:8px;display:flex;gap:5px;overflow-x:auto" id="history"></div>
-</div>
-
-<!-- ACCOUNT - CLEAN VERSION -->
-<div id="tab-account" class="tab">
-  <div style="background:#151525;margin:10px;border-radius:16px;padding:20px;text-align:center;border:1px solid #222">
-    <small style="color:#888" id="accName">Player</small>
-    <h1 id="bigBal" style="color:#ffcc00;margin:10px 0">KSh 0</h1>
-    <small id="accPhone" style="color:#666"></small>
-    <div style="display:flex;gap:8px;margin-top:15px">
-      <button class="bet-btn" style="background:#ffcc00;color:black" onclick="deposit()">DEPOSIT</button>
-      <button class="bet-btn" style="background:#00c853;color:white" onclick="withdraw()">WITHDRAW</button>
-    </div>
-  </div>
-  <!-- REMOVED Real Balance and Demo Balance -->
-  <div style="background:#2a1a00;margin:10px;border-radius:12px;padding:12px;border:1px solid #ffcc00"><small>My Profit (Your Admin Profit)</small><br><b id="adminP" style="color:#ffcc00;font-size:20px">KSh 0</b></div>
-  <div style="text-align:center;margin-top:20px">
-    <button onclick="logout()" style="background:0;border:0;color:#666;font-size:12px">LOGOUT</button>
-  </div>
-</div>
-
-<div class="bottom">
-  <button id="b-market" class="active" onclick="showTab('market')">💻<br>MARKET</button>
-  <button id="b-account" onclick="showTab('account')">👤<br>ACCOUNT</button>
-</div>
-
-<script>
-let currentUser=null, acc={real:0,demo:10000}, active='real', myProfit=0, mult=1, bets=[null,null,null], phase='betting', countdown=5, hist=[2.3,1.1,4.5,12.2,1.02], codeInt;
-let users=JSON.parse(localStorage.getItem('voxUsers')||'{}');
-function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
-function doRegister(){
-  let name=document.getElementById('regName').value, phone=document.getElementById('regPhone').value, pass=document.getElementById('regPass').value;
-  if(!name||!phone||pass.length<4){document.getElementById('authMsg').innerText='Fill all fields, password min 4'; return;}
-  if(users[phone]){document.getElementById('authMsg').innerText='Number already registered, Sign In'; return;}
-  users[phone]={name:name, pass:pass, real:100, demo:10000}; localStorage.setItem('voxUsers', JSON.stringify(users));
-  currentUser=phone; acc.real=100; acc.demo=10000; localStorage.setItem('voxSession', phone); afterLogin();
-}
-function doLogin(){
-  let phone=document.getElementById('loginPhone').value, pass=document.getElementById('loginPass').value;
-  if(!users[phone]||users[phone].pass!=pass){document.getElementById('authMsg').innerText='Wrong phone or password'; return;}
-  currentUser=phone; acc.real=users[phone].real; acc.demo=users[phone].demo; localStorage.setItem('voxSession', phone); afterLogin();
-}
-function afterLogin(){
-  document.getElementById('authOverlay').style.display='none';
-  document.getElementById('accName').innerText=users[currentUser].name;
-  document.getElementById('accPhone').innerText=currentUser;
-  updateBal(); startBetting();
-}
-function logout(){localStorage.removeItem('voxSession'); location.reload();}
-function saveUser(){if(currentUser){users[currentUser].real=acc.real; users[currentUser].demo=acc.demo; localStorage.setItem('voxUsers', JSON.stringify(users));}}
-let sess=localStorage.getItem('voxSession'); if(sess && users[sess]){currentUser=sess; acc.real=users[sess].real; acc.demo=users[sess].demo; document.getElementById('authOverlay').style.display='none'; document.getElementById('accName').innerText=users[currentUser].name; document.getElementById('accPhone').innerText=currentUser;}
-function setAcc(t){active=t; document.getElementById('rBtn').className=t=='real'?'real-on':'off'; document.getElementById('dBtn').className=t=='demo'?'real-on':'off'; if(t=='demo'){document.getElementById('dBtn').style.background='#00c853'; document.getElementById('dBtn').style.color='white';} updateBal();}
-function updateBal(){document.getElementById('bal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('bigBal').innerText='KSh '+Math.floor(acc[active]); document.getElementById('adminP').innerText='KSh '+Math.floor(myProfit); saveUser();}
-function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+n).classList.add('active'); document.getElementById('b-'+n).classList.add('active');}
-function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#664d00':'#ffcc00'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
-function startCodes(){const c=document.getElementById('codes'); codeInt=setInterval(()=>{let el=document.createElement('div'); el.className='code'; el.style.left=Math.random()*92+'%'; el.style.animationDuration=(2+Math.random()*2.5)+'s'; let arr=['1.23x','2.01x','5.44x','10x','1.05x','3.7x','BTC','KSh','100x','WIN','CODE']; el.innerText=arr[Math.floor(Math.random()*arr.length)]; c.appendChild(el); setTimeout(()=>el.remove(),4000);},130);}
-function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
-function startBetting(){
-  if(!currentUser) return;
-  phase='betting'; countdown=5; mult=1; bets=[null,null,null];
-  document.getElementById('mult').innerText='1.00x'; document.getElementById('mult').style.color='#ffcc00'; document.getElementById('mult').style.fontSize='80px';
-  stopCodes(); startCodes();
-  [1,2,3].forEach(i=>{document.getElementById('btn'+i).innerText='BET '+i; document.getElementById('btn'+i).style.background='#ffcc00'; document.getElementById('btn'+i).style.color='black'; document.getElementById('btn'+i).disabled=false;});
-  let t=setInterval(()=>{
-    countdown-=0.1; document.getElementById('timer').innerText=countdown.toFixed(1)+'s'; document.getElementById('timer').style.display='block';
-    if(countdown<=0){clearInterval(t); document.getElementById('timer').style.display='none'; startCodesUp();}
-  },100);
-}
-function startCodesUp(){
-  phase='flying'; document.getElementById('status').innerText='🚀 Running - Cashout!';
-  let crashPoint=active=='demo'?Math.random()*8+2:Math.random()<0.65?Math.random()*1.3+1:Math.random()*12+2;
-  let speed=0.02;
-  let fly=setInterval(()=>{
-    mult+=speed; speed+=0.0015+mult*0.0006;
-    document.getElementById('mult').innerText=mult.toFixed(2)+'x'; document.getElementById('mult').style.fontSize=(65+mult*1.5)+'px';
-    bets.forEach((b,idx)=>{if(b){document.getElementById('btn'+(idx+1)).innerText='CASHOUT '+(b.amount*mult).toFixed(0); document.getElementById('btn'+(idx+1)).style.background='#00ff88';}});
-    if(mult>=crashPoint){
-      clearInterval(fly); stopCodes();
-      document.getElementById('mult').innerText='CRASHED '+mult.toFixed(2)+'x'; document.getElementById('mult').style.color='#ff1744'; document.getElementById('mult').style.fontSize='38px';
-      hist.push(mult); updateHist();
-      bets.forEach((b,idx)=>{if(b){if(active=='real') myProfit+=b.amount; document.getElementById('btn'+(idx+1)).innerText='LOST'; document.getElementById('btn'+(idx+1)).style.background='#ff1744';}});
-      document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();
-      setTimeout(startBetting,3000);
-    }
-  },80);
-}
-function bet(slot){
-  let i=slot-1;
-  if(phase=='betting'){
-    if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);
-    if(acc[active]<amt){alert('Low balance'); showTab('account'); return;}
-    acc[active]-=amt; bets[i]={amount:amt}; updateBal();
-    document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';
-  }else if(phase=='flying' && bets[i]){
-    let win=bets[i].amount*mult; acc[active]+=win;
-    document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled=true; bets[i]=null; updateBal();
-  }
-}
-function deposit(){let a=prompt('Enter amount to deposit:'); if(a){acc.real+=parseInt(a); myProfit+=parseInt(a); updateBal(); alert('Deposited KSh '+a);}}
-function withdraw(){
-  if(acc.real < 100){ alert('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }
-  let amount = prompt('WITHDRAW\nYour balance: KSh '+acc.real+'\n\nEnter amount to withdraw (Min 100):');
+function deposit(){
+  let phone = prompt('DEPOSIT\n\nEnter M-PESA Phone Number to pay from:\ne.g 0790806650');
+  if(!phone) return;
+  if(phone.length < 10){ alert('Enter valid phone 07XXXXXXXX'); return; }
+  
+  let amount = prompt('Enter amount to deposit KSh:\nPay to Till: 123456\nAccount: '+phone);
   if(!amount) return;
   amount = parseInt(amount);
-  if(amount < 100){ alert('Minimum is 100'); return; }
-  if(amount > acc.real){ alert('You only have KSh '+acc.real); return; }
-  let phone = prompt('Enter M-PESA number to receive KSh '+amount+':', currentUser);
-  if(!phone) return;
-  acc.real -= amount;
-  updateBal();
-  alert('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+phone+'\n\nYou will receive M-PESA in 5 minutes.');
-  let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');
-  reqs.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});
-  localStorage.setItem('withdrawReqs', JSON.stringify(reqs));
+  if(amount < 50){ alert('Minimum deposit is KSh 50'); return; }
+  
+  acc.real += amount; 
+  myProfit += amount; 
+  updateBal(); 
+  
+  alert('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+phone+'\nTo Till: 123456\nPlease complete M-PESA payment.\nBalance will reflect after payment.');
+  
+  // Save deposit request so you can see it as admin
+  let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');
+  deps.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});
+  localStorage.setItem('depositReqs', JSON.stringify(deps));
 }
-updateBal(); updateHist(); if(currentUser) startBetting();
-</script>
-</body>
-</html>

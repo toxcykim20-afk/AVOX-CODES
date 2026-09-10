@@ -5,7 +5,9 @@
 <title>AVOX CODES - Crash</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#050508;color:white;font-family:Arial;padding-bottom:65px}
-.header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222}
+.header{background:#12121f;padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;position:relative}
+.menu-btn{background:0;border:0;color:#ffcc00;font-size:22px;font-weight:900;padding:5px 10px;cursor:pointer}
+.logo-center{position:absolute;left:50%;transform:translateX(-50%);color:#ffcc00;font-weight:900;font-size:15px}
 .real-on{background:#ffcc00;color:black;padding:6px 14px;border:0;border-radius:15px;font-weight:900;font-size:11px}.off{background:#222;color:#888;padding:6px 14px;border:0;border-radius:15px;font-size:11px}
 #game{height:45vh;background:#050508;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
 #mult{font-size:80px;font-weight:900;color:#ffcc00;z-index:10;text-shadow:0 0 30px #ffcc00;font-family:monospace}
@@ -54,9 +56,10 @@
 </div>
 
 <div class="header">
-  <b style="color:#ffcc00">AVOX CODES</b>
-  <div style="display:flex;gap:4px"><button id="rBtn" class="real-on" onclick="setAcc('real')">REAL</button><button id="dBtn" class="off" onclick="setAcc('demo')">DEMO</button></div>
-  <b id="bal" style="color:#ffcc00">KSh 0</b>
+  <button class="menu-btn" onclick="alert('More options coming soon!')">⋮</button>
+  <b class="logo-center">AVOX CODES</b>
+  <div style="display:flex;gap:4px;z-index:10"><button id="rBtn" class="real-on" onclick="setAcc('real')">REAL</button><button id="dBtn" class="off" onclick="setAcc('demo')">DEMO</button></div>
+  <b id="bal" style="color:#ffcc00;z-index:10">KSh 0</b>
 </div>
 
 <div id="tab-market" class="tab active">
@@ -68,8 +71,6 @@
   
   <!-- BET 2 -->
   <div class="bet-panel"><input id="stake2" value="20" type="number"><button id="btn2" class="bet-btn" style="background:#ffcc00;color:black" onclick="bet(2)">BET 2</button></div>
-  
-  <!-- REMOVED BET 3 -->
   
   <div style="padding:8px;display:flex;gap:5px;overflow-x:auto" id="history"></div>
 </div>
@@ -141,7 +142,7 @@ function startCodes(){const c=document.getElementById('codes'); codeInt=setInter
 function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
 function startBetting(){
   if(!currentUser) return;
-  phase='betting'; countdown=5; mult=1; bets=[null,null]; // 2 bets only
+  phase='betting'; countdown=5; mult=1; bets=[null,null];
   document.getElementById('mult').innerText='1.00x'; document.getElementById('mult').style.color='#ffcc00'; document.getElementById('mult').style.fontSize='80px';
   stopCodes(); startCodes();
   [1,2].forEach(i=>{document.getElementById('btn'+i).innerText='BET '+i; document.getElementById('btn'+i).style.background='#ffcc00'; document.getElementById('btn'+i).style.color='black'; document.getElementById('btn'+i).disabled=false;});

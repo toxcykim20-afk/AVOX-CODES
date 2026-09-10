@@ -24,40 +24,31 @@
 .bottom button{flex:1;background:0;border:0;color:#888;padding:8px;font-size:11px;font-weight:700}
 .bottom button.active{color:#ffcc00;border-top:3px solid #ffcc00}
 
-/* V8 ANIMATED LOGIN */
-#authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center, #0a0a1a 0%, #000 100%);z-index:100;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.authBox{background:linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);border:2px solid #ffcc00;border-radius:24px;padding:30px 25px;width:92%;max-width:380px;text-align:center;box-shadow:0 0 50px rgba(255,204,0,0.4);position:relative;z-index:2}
+/* V8 LOGIN WITH REAL CAR */
+#authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center, #0a0a1a 0%, #000 100%);z-index:100;display:flex;align-items:center;justify-content:center}
+.authBox{background:linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);border:2px solid #ffcc00;border-radius:24px;padding:25px;width:92%;max-width:380px;text-align:center;box-shadow:0 0 50px rgba(255,204,0,0.4)}
 
-/* V8 ANIMATION */
-.v8-container{position:relative;height:60px;margin-bottom:10px}
-.v8-text{font-size:42px;font-weight:900;color:#ffcc00;letter-spacing:8px;text-shadow:0 0 20px #ffcc00, 0 0 40px #ffaa00;animation:v8Pulse 1.5s ease-in-out infinite}
-.v8-car{font-size:30px;position:absolute;top:5px;left:-40px;animation:v8Drive 3s linear infinite;filter:drop-shadow(0 0 15px #ffcc00)}
-@keyframes v8Pulse{0%,100%{transform:scale(1);text-shadow:0 0 20px #ffcc00}50%{transform:scale(1.1);text-shadow:0 0 40px #ffcc00,0 0 60px #ffaa00}}
-@keyframes v8Drive{0%{left:-40px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% + 40px);opacity:0}}
+.car-container{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+.car-img{width:45px;height:25px;filter:drop-shadow(0 0 10px #ff0000)}
+.v8-text{font-size:40px;font-weight:900;color:#ffcc00;letter-spacing:8px;text-shadow:0 0 20px #ffcc00}
 
-.authBox h2{color:#ffcc00;margin:0;font-size:28px;letter-spacing:2px;text-shadow:0 0 15px #ffcc00}
+.authBox h2{color:#ffcc00;margin:5px 0;font-size:26px;letter-spacing:2px;text-shadow:0 0 15px #ffcc00}
 .authBox small{color:#aaa;font-size:12px}
 
 .tabs{display:flex;justify-content:center;gap:30px;margin:20px 0 15px;border-bottom:1px solid #333}
-.tabBtn{padding:12px 0;border:0;background:0;color:#666;font-weight:900;font-size:14px;position:relative;transition:0.3s}
+.tabBtn{padding:12px 0;border:0;background:0;color:#666;font-weight:900;font-size:14px;position:relative}
 .tabBtn.active{color:#ffcc00}
-.tabBtn.active::after{content:'';position:absolute;bottom:-1px;left:0;width:100%;height:3px;background:#ffcc00;border-radius:3px}
+.tabBtn.active::after{content:'';position:absolute;bottom:-1px;left:0;width:100%;height:3px;background:#ffcc00}
 
-.authBox input{width:100%;padding:16px;margin:10px 0;background:#0a0a0f;border:2px solid #333;border-radius:14px;color:white;font-size:15px;font-weight:600;transition:0.3s}
+.authBox input{width:100%;padding:16px;margin:10px 0;background:#0a0a0f;border:2px solid #333;border-radius:14px;color:white;font-size:15px}
 .authBox input:focus{border-color:#ffcc00;outline:0;box-shadow:0 0 15px rgba(255,204,0,0.4)}
 
-.authBtn{width:100%;padding:16px;margin:15px 0;border:0;border-radius:14px;font-weight:900;font-size:16px;background:linear-gradient(90deg, #ffcc00 0%, #ffaa00 100%);color:black;cursor:pointer;box-shadow:0 5px 20px rgba(255,204,0,0.4);transition:0.2s}
-.authBtn:active{transform:scale(0.97)}
+.authBtn{width:100%;padding:16px;margin:15px 0;border:0;border-radius:14px;font-weight:900;font-size:16px;background:linear-gradient(90deg, #ffcc00 0%, #ffaa00 100%);color:black;box-shadow:0 5px 20px rgba(255,204,0,0.4)}
 .bonus-tag{color:#00ff88;font-size:12px;font-weight:700;margin-top:8px}
 
-/* BACKGROUND SPEED LINES */
-.speed-line{position:absolute;width:2px;height:100px;background:linear-gradient(transparent, #ffcc00, transparent);animation:speed 1s linear infinite;opacity:0.3}
-@keyframes speed{0%{transform:translateY(-100px)}100%{transform:translateY(100vh)}}
-
 /* MENU STYLES */
-#moreMenu{position:fixed;top:50px;left:10px;width:90%;max-width:350px;background:#151525;border:1px solid #333;border-radius:16px;padding:10px;z-index:200;display:none;box-shadow:0 0 20px rgba(0,0,0,0.8)}
+#moreMenu{position:fixed;top:50px;left:10px;width:90%;max-width:350px;background:#151525;border:1px solid #333;border-radius:16px;padding:10px;z-index:200;display:none}
 .menu-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:#0f0f1a;margin:6px 0;cursor:pointer}
-.menu-item:active{background:#222}
 .menu-icon{font-size:20px;width:25px}
 .menu-text b{display:block;font-size:14px}
 .menu-text small{color:#888;font-size:11px}
@@ -65,6 +56,8 @@
 </style>
 </head>
 <body>
+
+<audio id="lambSound" loop></audio>
 
 <div id="overlay" class="overlay" onclick="closeMenu()"></div>
 
@@ -80,16 +73,11 @@
   <div class="menu-item" onclick="menuAlert('Legal Documents','Terms, Privacy Policy, Risk Disclosure')"><div class="menu-icon">📄</div><div class="menu-text"><b>Legal Documents</b><small>Terms, Privacy Policy, Risk Disclosure</small></div><div style="margin-left:auto">›</div></div>
 </div>
 
-<!-- V8 ANIMATED LOGIN -->
+<!-- V8 LOGIN WITH REAL CAR IMAGE -->
 <div id="authOverlay">
-  <!-- Speed lines background -->
-  <div class="speed-line" style="left:20%"></div>
-  <div class="speed-line" style="left:50%"></div>
-  <div class="speed-line" style="left:80%"></div>
-  
   <div class="authBox">
-    <div class="v8-container">
-      <div class="v8-car">🏎️</div>
+    <div class="car-container">
+      <img src="https://i.imgur.com/8zYq3pL.png" class="car-img"> <!-- RED LAMBORGHINI -->
       <div class="v8-text">V8</div>
     </div>
     
@@ -161,6 +149,7 @@
 <script>
 let currentUser=null, acc={real:0,demo:10000}, active='real', myProfit=0, mult=1, bets=[null,null], phase='betting', countdown=5, hist=[2.3,1.1,4.5,12.2,1.02], codeInt;
 let users=JSON.parse(localStorage.getItem('voxUsers')||'{}');
+let lambAudio = document.getElementById('lambSound');
 
 function openMenu(){document.getElementById('moreMenu').style.display='block';document.getElementById('overlay').style.display='block';if(currentUser){document.getElementById('menuName').innerText=users[currentUser].name;document.getElementById('menuEmail').innerText=currentUser;}}
 function closeMenu(){document.getElementById('moreMenu').style.display='none';document.getElementById('overlay').style.display='none';}
@@ -169,7 +158,13 @@ function menuAlert(title,desc){alert(title+'\n\n'+desc+'\n\nThis feature will be
 function switchAuth(t){document.getElementById('tabSignIn').className=t=='in'?'tabBtn active':'tabBtn'; document.getElementById('tabSignUp').className=t=='up'?'tabBtn active':'tabBtn'; document.getElementById('formSignIn').style.display=t=='in'?'block':'none'; document.getElementById('formSignUp').style.display=t=='up'?'block':'none';}
 function doRegister(){let name=document.getElementById('regName').value, phone=document.getElementById('regPhone').value, pass=document.getElementById('regPass').value;if(!name||!phone||pass.length<4){document.getElementById('authMsg').innerText='Fill all fields, password min 4'; return;}if(users[phone]){document.getElementById('authMsg').innerText='Number already registered, Sign In'; return;}users[phone]={name:name, pass:pass, real:100, demo:10000}; localStorage.setItem('voxUsers', JSON.stringify(users));currentUser=phone; acc.real=100; acc.demo=10000; localStorage.setItem('voxSession', phone); afterLogin();}
 function doLogin(){let phone=document.getElementById('loginPhone').value, pass=document.getElementById('loginPass').value;if(!users[phone]||users[phone].pass!=pass){document.getElementById('authMsg').innerText='Wrong phone or password'; return;}currentUser=phone; acc.real=users[phone].real; acc.demo=users[phone].demo; localStorage.setItem('voxSession', phone); afterLogin();}
-function afterLogin(){document.getElementById('authOverlay').style.display='none';document.getElementById('accName').innerText=users[currentUser].name;document.getElementById('accPhone').innerText=currentUser;updateBal(); startBetting();}
+function afterLogin(){
+  document.getElementById('authOverlay').style.display='none';
+  lambAudio.pause(); // STOP SOUND
+  document.getElementById('accName').innerText=users[currentUser].name;
+  document.getElementById('accPhone').innerText=currentUser;
+  updateBal(); startBetting();
+}
 function logout(){localStorage.removeItem('voxSession'); location.reload();}
 function saveUser(){if(currentUser){users[currentUser].real=acc.real; users[currentUser].demo=acc.demo; localStorage.setItem('voxUsers', JSON.stringify(users));}}
 let sess=localStorage.getItem('voxSession'); if(sess && users[sess]){currentUser=sess; acc.real=users[sess].real; acc.demo=users[sess].demo; document.getElementById('authOverlay').style.display='none'; document.getElementById('accName').innerText=users[currentUser].name; document.getElementById('accPhone').innerText=currentUser;}
@@ -181,9 +176,47 @@ function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.rem
 function updateHist(){document.getElementById('history').innerHTML=hist.slice(-15).map(x=>`<span style="padding:5px 10px;border-radius:15px;background:${x<2?'#333':x<10?'#664d00':'#ffcc00'};color:${x>=10?'black':'white'};font-size:11px">${x.toFixed(2)}x</span>`).join('');}
 function startCodes(){const c=document.getElementById('codes'); codeInt=setInterval(()=>{let el=document.createElement('div'); el.className='code'; el.style.left=Math.random()*92+'%'; el.style.animationDuration=(2+Math.random()*2.5)+'s'; let arr=['1.23x','2.01x','5.44x','10x','1.05x','3.7x','BTC','KSh','100x','WIN','CODE']; el.innerText=arr[Math.floor(Math.random()*arr.length)]; c.appendChild(el); setTimeout(()=>el.remove(),4000);},130);}
 function stopCodes(){clearInterval(codeInt); document.getElementById('codes').innerHTML='';}
-function startBetting(){if(!currentUser) return;phase='betting'; countdown=5; mult=1; bets=[null,null];document.getElementById('mult').innerText='1.00x'; document.getElementById('mult').style.color='#ffcc00'; document.getElementById('mult').style.fontSize='80px';stopCodes(); startCodes();[1,2].forEach(i=>{document.getElementById('btn'+i).innerText='BET '+i; document.getElementById('btn'+i).style.background='#ffcc00'; document.getElementById('btn'+i).style.color='black'; document.getElementById('btn'+i).disabled=false;});let t=setInterval(()=>{countdown-=0.1; document.getElementById('timer').innerText=countdown.toFixed(1)+'s'; document.getElementById('timer').style.display='block';if(countdown<=0){clearInterval(t); document.getElementById('timer').style.display='none'; startCodesUp();}},100);}
-function startCodesUp(){phase='flying'; document.getElementById('status').innerText='🚀 Running - Cashout!';let crashPoint=active=='demo'?Math.random()*8+2:Math.random()<0.65?Math.random()*1.3+1:Math.random()*12+2;let speed=0.02;let fly=setInterval(()=>{mult+=speed; speed+=0.0015+mult*0.0006;document.getElementById('mult').innerText=mult.toFixed(2)+'x'; document.getElementById('mult').style.fontSize=(65+mult*1.5)+'px';bets.forEach((b,idx)=>{if(b){document.getElementById('btn'+(idx+1)).innerText='CASHOUT '+(b.amount*mult).toFixed(0); document.getElementById('btn'+(idx+1)).style.background='#00ff88';}});if(mult>=crashPoint){clearInterval(fly); stopCodes();document.getElementById('mult').innerText='CRASHED '+mult.toFixed(2)+'x'; document.getElementById('mult').style.color='#ff1744'; document.getElementById('mult').style.fontSize='38px';hist.push(mult); updateHist();bets.forEach((b,idx)=>{if(b){if(active=='real') myProfit+=b.amount; document.getElementById('btn'+(idx+1)).innerText='LOST'; document.getElementById('btn'+(idx+1)).style.background='#ff1744';}});document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();setTimeout(startBetting,3000);}},80);}
-function bet(slot){let i=slot-1;if(phase=='betting'){if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);if(acc[active]<amt){alert('Low balance'); showTab('account'); return;}acc[active]-=amt; bets[i]={amount:amt}; updateBal();document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';}else if(phase=='flying' && bets[i]){let win=bets[i].amount*mult; acc[active]+=win;document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled='true'; bets[i]=null; updateBal();}}
+
+function startBetting(){
+  if(!currentUser) return;
+  phase='betting'; countdown=5; mult=1; bets=[null,null];
+  lambAudio.pause(); // STOP SOUND
+  document.getElementById('mult').innerText='1.00x'; document.getElementById('mult').style.color='#ffcc00'; document.getElementById('mult').style.fontSize='80px';
+  stopCodes(); startCodes();
+  [1,2].forEach(i=>{document.getElementById('btn'+i).innerText='BET '+i; document.getElementById('btn'+i).style.background='#ffcc00'; document.getElementById('btn'+i).style.color='black'; document.getElementById('btn'+i).disabled=false;});
+  let t=setInterval(()=>{
+    countdown-=0.1; document.getElementById('timer').innerText=countdown.toFixed(1)+'s'; document.getElementById('timer').style.display='block';
+    if(countdown<=0){clearInterval(t); document.getElementById('timer').style.display='none'; startCodesUp();}
+  },100);
+}
+
+function startCodesUp(){
+  phase='flying'; document.getElementById('status').innerText='🚀 Running - Cashout!';
+  lambAudio.src = 'https://www.soundjay.com/mechanical/sounds/car-engine-rev-01.mp3'; // LAMBORGHINI SOUND
+  lambAudio.play();
+  
+  let crashPoint=active=='demo'?Math.random()*8+2:Math.random()<0.65?Math.random()*1.3+1:Math.random()*12+2;
+  let speed=0.02;
+  let fly=setInterval(()=>{
+    mult+=speed; speed+=0.0015+mult*0.0006;
+    document.getElementById('mult').innerText=mult.toFixed(2)+'x'; 
+    document.getElementById('mult').style.fontSize=(65+mult*1.5)+'px';
+    
+    // SAUTI INAONGEZEKA KADRI × INAPANDA
+    lambAudio.playbackRate = 1 + (mult/10); // 1x = 1.1x speed, 10x = 2x speed
+    
+    bets.forEach((b,idx)=>{if(b){document.getElementById('btn'+(idx+1)).innerText='CASHOUT '+(b.amount*mult).toFixed(0); document.getElementById('btn'+(idx+1)).style.background='#00ff88';}});
+    if(mult>=crashPoint){
+      clearInterval(fly); stopCodes(); lambAudio.pause();
+      document.getElementById('mult').innerText='CRASHED '+mult.toFixed(2)+'x'; document.getElementById('mult').style.color='#ff1744'; document.getElementById('mult').style.fontSize='38px';
+      hist.push(mult); updateHist();
+      bets.forEach((b,idx)=>{if(b){if(active=='real') myProfit+=b.amount; document.getElementById('btn'+(idx+1)).innerText='LOST'; document.getElementById('btn'+(idx+1)).style.background='#ff1744';}});
+      document.getElementById('status').innerText='💥 Crashed @ '+crashPoint.toFixed(2)+'x - Next 3s'; updateBal();
+      setTimeout(startBetting,3000);
+    }
+  },80);
+}
+function bet(slot){let i=slot-1;if(phase=='betting'){if(bets[i]) return; let amt=parseInt(document.getElementById('stake'+slot).value);if(acc[active]<amt){alert('Low balance'); showTab('account'); return;}acc[active]-=amt; bets[i]={amount:amt}; updateBal();document.getElementById('btn'+slot).innerText='PLACED ✓ KSh '+amt; document.getElementById('btn'+slot).style.background='#00c853'; document.getElementById('btn'+slot).style.color='white';}else if(phase=='flying' && bets[i]){let win=bets[i].amount*mult; acc[active]+=win;document.getElementById('btn'+slot).innerText='WON KSh '+Math.floor(win); document.getElementById('btn'+slot).disabled=true; bets[i]=null; updateBal();}}
 function deposit(){let phone = prompt('DEPOSIT\nStep 1: Enter M-PESA Phone Number to pay from:\ne.g 0790806650');if(!phone) return;if(phone.length < 10){ alert('Enter valid phone 07XXXXXXXX'); return; }let amount = prompt('Step 2: Enter amount to deposit KSh:\n\nPay to Till: 123456\nAccount: '+phone);if(!amount) return;amount = parseInt(amount);if(amount < 50){ alert('Minimum deposit is KSh 50'); return; }acc.real += amount; myProfit += amount; updateBal(); alert('✅ Deposit Request Created!\n\nAmount: KSh '+amount+'\nFrom: '+phone+'\nTo Till: 123456\nPlease complete M-PESA payment.');let deps = JSON.parse(localStorage.getItem('depositReqs')||'[]');deps.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString(), status:'Pending'});localStorage.setItem('depositReqs', JSON.stringify(deps));}
 function withdraw(){if(acc.real < 100){ alert('Minimum withdraw is KSh 100. Your balance: KSh '+acc.real); return; }let amount = prompt('WITHDRAW\nYour balance: KSh '+acc.real+'\n\nEnter amount to withdraw (Min 100):');if(!amount) return;amount = parseInt(amount);if(amount < 100){ alert('Minimum is 100'); return; }if(amount > acc.real){ alert('You only have KSh '+acc.real); return; }let phone = prompt('Enter M-PESA number to receive KSh '+amount+':', currentUser);if(!phone) return;acc.real -= amount;updateBal();alert('✅ Withdraw request sent!\n\nAmount: KSh '+amount+'\nTo: '+phone+'\n\nYou will receive M-PESA in 5 minutes.');let reqs = JSON.parse(localStorage.getItem('withdrawReqs')||'[]');reqs.push({name:users[currentUser].name, phone:phone, amount:amount, userPhone:currentUser, time:new Date().toLocaleString()});localStorage.setItem('withdrawReqs', JSON.stringify(reqs));}
 updateBal(); updateHist(); if(currentUser) startBetting();setAcc(active);
